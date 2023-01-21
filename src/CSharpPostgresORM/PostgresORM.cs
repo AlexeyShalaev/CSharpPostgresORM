@@ -1,8 +1,9 @@
-﻿using Dapper;
+using System.Reflection;
+using Dapper;
 using Npgsql;
+using CSharpPostgresORM.Utils;
 
 namespace CSharpPostgresORM;
-using System.Reflection;
 
 public class DataBaseModel<TModel>
 {
@@ -24,7 +25,7 @@ public class DataBaseModel<TModel>
         
         foreach (var propertyInfo in typeof(TModel).GetProperties())
         {
-            if (ToSqlType(propertyInfo.PropertyType) == "" && !IsISqlType(propertyInfo))
+            if (SqlType.ToSqlType(propertyInfo.PropertyType) == "" && !SqlType.IsISqlType(propertyInfo))
             {
                 throw new Exception($"{typeof(TModel)}'s property {propertyInfo} is not inherited from the interface.");
             }
@@ -49,14 +50,14 @@ public class DataBaseModel<TModel>
         var columns = new List<string>();
         foreach (var propertyInfo in typeof(TModel).GetProperties())
         {
-            var flags = GetFlags(propertyInfo);
-            if (IsISqlType(propertyInfo))
+            var flags = Utils.Attributes.GetSqlColumnFlags(propertyInfo);
+            if (SqlType.IsISqlType(propertyInfo))
             {
                 var columnType = propertyInfo.PropertyType
                     .GetField("SqlTypeName")!.GetValue(propertyInfo.PropertyType);
                 if (columnType.ToString().StartsWith("VARCHAR"))
                 {
-                    columnType += $"({GetLengthAttribute(propertyInfo)})";
+                    columnType += $"({Utils.Attributes.GetColumnLengthAttribute(propertyInfo)})";
                 }
 
                 columns.Add(flags is "" ? 
@@ -66,8 +67,8 @@ public class DataBaseModel<TModel>
             else
             {
                 columns.Add(flags is "" ? 
-                    $"{propertyInfo.Name} {ToSqlType(propertyInfo.PropertyType)}" : 
-                    $"{propertyInfo.Name} {ToSqlType(propertyInfo.PropertyType)} {flags}");
+                    $"{propertyInfo.Name} {SqlType.ToSqlType(propertyInfo.PropertyType)}" : 
+                    $"{propertyInfo.Name} {SqlType.ToSqlType(propertyInfo.PropertyType)} {flags}");
             }
         }
 
@@ -80,11 +81,11 @@ public class DataBaseModel<TModel>
         var values = new List<string>();
         foreach (var propertyInfo in typeof(TModel).GetProperties())
         {
-            if (IsISqlType(propertyInfo))
+            if (SqlType.IsISqlType(propertyInfo))
             {
                 values.Add($"'{propertyInfo.PropertyType.GetProperty("Value").GetValue(propertyInfo.GetValue(obj))}'");
             }
-            else if (ToSqlType(propertyInfo.PropertyType) != "")
+            else if (SqlType.ToSqlType(propertyInfo.PropertyType) != "")
             {
                 values.Add($"'{propertyInfo.GetValue(obj)}'");
             }
@@ -124,22 +125,17 @@ public class DataBaseModel<TModel>
         Console.WriteLine(query);
     }
 
-
-    /*
-     * UTILS BLOCK
-     */
-
     private string CreateFilter(TModel obj)
     {
         var conditions = new List<string>();
         foreach (var propertyInfo in typeof(TModel).GetProperties())
         {
             var condition = $"{propertyInfo.Name} = ";
-            if (IsISqlType(propertyInfo))
+            if (SqlType.IsISqlType(propertyInfo))
             {
                 condition += $"'{propertyInfo.PropertyType.GetProperty("Value").GetValue(propertyInfo.GetValue(obj))}'";
             }
-            else if (ToSqlType(propertyInfo.PropertyType) != "")
+            else if (SqlType.ToSqlType(propertyInfo.PropertyType) != "")
             {
                 condition += $"'{propertyInfo.GetValue(obj)}'";
             }
@@ -174,75 +170,7 @@ public class DataBaseModel<TModel>
 
         return string.Join(", ", columns);
     }
-
-    private static string GetFlags(PropertyInfo propertyInfo)
-    {
-        var flags = "";
-        foreach (var attr in propertyInfo.GetCustomAttributes(true))
-        {
-            var sqlAttr = attr as SQLColumn;
-            if (sqlAttr != null)
-            {
-                flags += sqlAttr.Flag;
-            }
-        }
-
-        return flags;
-    }
-
-    private static int GetLengthAttribute(PropertyInfo propertyInfo)
-    {
-        foreach (var attr in propertyInfo.GetCustomAttributes(true))
-        {
-            var sqlAttr = attr as ColumnLength;
-            if (sqlAttr != null)
-            {
-                return sqlAttr.Length;
-            }
-        }
-
-        return 255;
-    }
-
-    private bool IsISqlType(PropertyInfo propertyInfo)
-    {
-        //return propertyInfo.PropertyType.GetInterfaces().Contains(typeof(ISqlType));
-        return typeof(ISqlType).IsAssignableFrom(propertyInfo.PropertyType);
-    }
-
-    private static string ToSqlType(Type type)
-    {
-        var typeCode = Type.GetTypeCode(type);
-        var name = "";
-
-        switch (typeCode)
-        {
-            case TypeCode.Byte:
-            case TypeCode.SByte:
-            case TypeCode.UInt16:
-            case TypeCode.UInt32:
-            case TypeCode.UInt64:
-            case TypeCode.Int16:
-            case TypeCode.Int32:
-            case TypeCode.Int64:
-                name = "INTEGER";
-                break;
-            case TypeCode.Boolean:
-                name = "BOOLEAN";
-                break;
-            case TypeCode.Decimal:
-            case TypeCode.Double:
-            case TypeCode.Single:
-                name = "DECIMAL";
-                break;
-            case TypeCode.String:
-                name = "TEXT";
-                break;
-        }
-
-        return name;
-    }
-
+    
     private async Task<int> ExecuteAsync(string query) 
         => await ExecuteAsync(query, null);
 
