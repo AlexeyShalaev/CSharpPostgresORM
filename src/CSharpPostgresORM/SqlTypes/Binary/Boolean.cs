@@ -1,4 +1,4 @@
-﻿namespace DefaultNamespace;
+namespace CSharpPostgresORM.SqlTypes.Binary;
 
 public class Boolean : ISqlType<bool>
 {

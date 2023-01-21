@@ -1,4 +1,4 @@
-﻿namespace DefaultNamespace;
+﻿namespace CSharpPostgresORM;
 
 public class BigSerial : ISqlType<int>
 {
@@ -10,10 +10,4 @@ public class BigSerial : ISqlType<int>
     {
         return new BigSerial { Value = value };
     }
-
-    /* public static implicit operator BigSerial(short value)
-     {
-         return new BigSerial { Value = value };
-     }
-     */
 }
