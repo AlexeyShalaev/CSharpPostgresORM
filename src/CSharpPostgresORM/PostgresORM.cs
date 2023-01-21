@@ -1,17 +1,25 @@
-﻿namespace CSharpPostgresORM;
+﻿using Dapper;
+using Npgsql;
+
+namespace CSharpPostgresORM;
 using System.Reflection;
 
 public class DataBaseModel<TModel>
 {
+    private readonly string _connectionString;
+    
     public string TableName { get; set; }
     
     public string SchemaName { get; set; }
+    
+    public Npgsql.NpgsqlConnection Connection { get; set; }
 
-    public DataBaseModel(string tableName, string schemaName = "public")
+    public DataBaseModel(string connectionString, string tableName, string schemaName = "public")
     {
         TableName = tableName;
         SchemaName = schemaName;
-
+        Connection = new NpgsqlConnection(connectionString);
+        
         foreach (var propertyInfo in typeof(TModel).GetProperties())
         {
             if (ToSqlType(propertyInfo.PropertyType) == "" && !IsISqlType(propertyInfo))
@@ -42,7 +50,8 @@ public class DataBaseModel<TModel>
             var flags = GetFlags(propertyInfo);
             if (IsISqlType(propertyInfo))
             {
-                var columnType = propertyInfo.PropertyType.GetField("SqlTypeName").GetValue(propertyInfo.PropertyType);
+                var columnType = propertyInfo.PropertyType
+                    .GetField("SqlTypeName").GetValue(propertyInfo.PropertyType);
                 if (columnType.ToString().StartsWith("VARCHAR"))
                 {
                     columnType += $"({GetLengthAttribute(propertyInfo)})";
@@ -231,4 +240,16 @@ public class DataBaseModel<TModel>
 
         return name;
     }
+
+    private async Task<int> ExecuteAsync(string query) 
+        => await ExecuteAsync(query, null);
+
+    private async Task<int> ExecuteAsync(string query, object? param) 
+        => await Connection.ExecuteAsync(query, param);
+
+    private async Task<IEnumerable<dynamic>> QueryAsync(string query)
+        => await QueryAsync(query, null);
+
+    private async Task<IEnumerable<dynamic>> QueryAsync(string query, object? param) 
+        => await Connection.QueryAsync(query, param);
 }
