@@ -1,4 +1,6 @@
 ﻿using System.Reflection;
+using CSharpPostgresORM.SqlTypes.Numeric;
+using Boolean = CSharpPostgresORM.SqlTypes.Binary.Boolean;
 
 namespace CSharpPostgresORM.Utils;
 

@@ -2,7 +2,6 @@ using System.Reflection;
 using Dapper;
 using Npgsql;
 using CSharpPostgresORM.Utils;
-
 namespace CSharpPostgresORM;
 
 public class DataBaseModel<TModel>
