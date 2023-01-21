@@ -1,12 +1,16 @@
-﻿namespace DefaultNamespace;
+﻿namespace CSharpPostgresORM;
+using System.Reflection;
 
-class DataBaseModel<TModel>
+public class DataBaseModel<TModel>
 {
     public string TableName { get; set; }
+    
+    public string SchemaName { get; set; }
 
-    public DataBaseModel(string tableName)
+    public DataBaseModel(string tableName, string schemaName = "public")
     {
         TableName = tableName;
+        SchemaName = schemaName;
 
         foreach (var propertyInfo in typeof(TModel).GetProperties())
         {
@@ -24,6 +28,12 @@ class DataBaseModel<TModel>
      * QUERIES BLOCK
      */
 
+    public void CreateSchema()
+    {
+        var query = $"CREATE SCHEMA IF NOT EXISTS {SchemaName}";
+        Console.WriteLine(query);
+    }
+    
     public void CreateTable()
     {
         var columns = new List<string>();
@@ -38,16 +48,19 @@ class DataBaseModel<TModel>
                     columnType += $"({GetLengthAttribute(propertyInfo)})";
                 }
 
-                columns.Add(
+                columns.Add(flags is "" ? 
+                    $"{propertyInfo.Name} {columnType}" : 
                     $"{propertyInfo.Name} {columnType} {flags}");
             }
             else
             {
-                columns.Add($"{propertyInfo.Name} {ToSqlType(propertyInfo.PropertyType)} {flags}");
+                columns.Add(flags is "" ? 
+                    $"{propertyInfo.Name} {ToSqlType(propertyInfo.PropertyType)}" : 
+                    $"{propertyInfo.Name} {ToSqlType(propertyInfo.PropertyType)} {flags}");
             }
         }
 
-        var query = $"CREATE TABLE IF NOT EXISTS public.{TableName} ({string.Join(", ", columns)});";
+        var query = $"CREATE TABLE IF NOT EXISTS {SchemaName}.{TableName} ({string.Join(", ", columns)});";
         Console.WriteLine(query);
     }
 
@@ -72,7 +85,7 @@ class DataBaseModel<TModel>
         }
 
         var query =
-            $"INSERT INTO public.{TableName}({GetColumns()}) VALUES({string.Join(", ", values)});";
+            $"INSERT INTO {SchemaName}.{TableName}({GetColumns()}) VALUES({string.Join(", ", values)});";
         Console.WriteLine(query);
     }
 

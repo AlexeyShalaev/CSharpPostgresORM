@@ -1,4 +1,4 @@
-﻿namespace DefaultNamespace;
+﻿namespace CSharpPostgresORM;
 
 public class ColumnLength : Attribute
 {
