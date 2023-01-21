@@ -1,81 +1,99 @@
-using System.Reflection;
+using CSharpPostgresORM.Utils;
 using Dapper;
 using Npgsql;
-using CSharpPostgresORM.Utils;
+
 namespace CSharpPostgresORM;
 
 public class DataBaseModel<TModel>
 {
     private readonly string _connectionString;
-    
+
     public string TableName { get; set; }
-    
+
     public string SchemaName { get; set; }
-    
+
     public NpgsqlConnection Connection { get; set; }
 
-    public DataBaseModel(string connectionString, string tableName, string schemaName = "public")
+    public static async Task<DataBaseModel<TModel>> CreateAsync(string connectionString, string tableName,
+        string schemaName = "public")
+    {
+        var dataBaseModel = new DataBaseModel<TModel>(connectionString, tableName, schemaName);
+        await dataBaseModel.InitializeAsync();
+        return dataBaseModel;
+    }
+
+    private async Task InitializeAsync()
+    {
+        await CreateSchema();
+        await CreateTable();
+    }
+
+    private DataBaseModel(string connectionString, string tableName, string schemaName)
     {
         TableName = tableName;
         SchemaName = schemaName;
         Connection = new NpgsqlConnection(connectionString);
 
         _connectionString = connectionString;
-        
+
         foreach (var propertyInfo in typeof(TModel).GetProperties())
         {
-            if (SqlType.ToSqlType(propertyInfo.PropertyType) == "" && !SqlType.IsISqlType(propertyInfo))
+            if (!SqlType.IsSqlType(propertyInfo))
             {
-                throw new Exception($"{typeof(TModel)}'s property {propertyInfo} is not inherited from the interface.");
+                throw new PostgresOrmException(
+                    $"{typeof(TModel)}'s property {propertyInfo} is not inherited from the interface.");
             }
         }
-
-        //if (typeof(TModel).GetProperties().All(IsISqlType) is false)
-        //   throw new Exception($"{typeof(TModel)}'s property is not inherited from the interface.");
     }
 
     /*
      * QUERIES BLOCK
      */
 
-    public void CreateSchema()
+    #region CreatingDB
+
+    private async Task<int> CreateSchema()
     {
         var query = $"CREATE SCHEMA IF NOT EXISTS {SchemaName}";
-        Console.WriteLine(query);
+        return await ExecuteAsync(query);
     }
-    
-    public void CreateTable()
+
+    private async Task<int> CreateTable()
     {
         var columns = new List<string>();
         foreach (var propertyInfo in typeof(TModel).GetProperties())
         {
-            var flags = Utils.Attributes.GetSqlColumnFlags(propertyInfo);
+            var flags = SqlAttributes.GetSqlColumnFlags(propertyInfo);
             if (SqlType.IsISqlType(propertyInfo))
             {
                 var columnType = propertyInfo.PropertyType
                     .GetField("SqlTypeName")!.GetValue(propertyInfo.PropertyType);
                 if (columnType.ToString().StartsWith("VARCHAR"))
                 {
-                    columnType += $"({Utils.Attributes.GetColumnLengthAttribute(propertyInfo)})";
+                    columnType += $"({SqlAttributes.GetColumnLengthAttribute(propertyInfo)})";
                 }
 
-                columns.Add(flags is "" ? 
-                    $"{propertyInfo.Name} {columnType}" : 
-                    $"{propertyInfo.Name} {columnType} {flags}");
+                columns.Add(flags is ""
+                    ? $"{propertyInfo.Name} {columnType}"
+                    : $"{propertyInfo.Name} {columnType} {flags}");
             }
-            else
+            else if (SqlType.IsConvertableSqlType(propertyInfo))
             {
-                columns.Add(flags is "" ? 
-                    $"{propertyInfo.Name} {SqlType.ToSqlType(propertyInfo.PropertyType)}" : 
-                    $"{propertyInfo.Name} {SqlType.ToSqlType(propertyInfo.PropertyType)} {flags}");
+                columns.Add(flags is ""
+                    ? $"{propertyInfo.Name} {SqlType.GetSqlTypeName(propertyInfo.PropertyType)}"
+                    : $"{propertyInfo.Name} {SqlType.GetSqlTypeName(propertyInfo.PropertyType)} {flags}");
             }
         }
 
         var query = $"CREATE TABLE IF NOT EXISTS {SchemaName}.{TableName} ({string.Join(", ", columns)});";
-        Console.WriteLine(query);
+        return await ExecuteAsync(query);
     }
 
-    public void Insert(TModel obj)
+    #endregion
+
+    #region Inserting
+
+    public async Task<int> Insert(TModel obj)
     {
         var values = new List<string>();
         foreach (var propertyInfo in typeof(TModel).GetProperties())
@@ -84,45 +102,58 @@ public class DataBaseModel<TModel>
             {
                 values.Add($"'{propertyInfo.PropertyType.GetProperty("Value").GetValue(propertyInfo.GetValue(obj))}'");
             }
-            else if (SqlType.ToSqlType(propertyInfo.PropertyType) != "")
+            else if (SqlType.IsConvertableSqlType(propertyInfo))
             {
                 values.Add($"'{propertyInfo.GetValue(obj)}'");
             }
-            else
-            {
-                // TODO: check if attributes contains not null
-                values.Add($"'NULL'");
-            }
+
+            throw new PostgresOrmException($"Can't get value from property {propertyInfo}");
         }
 
         var query =
             $"INSERT INTO {SchemaName}.{TableName}({GetColumns()}) VALUES({string.Join(", ", values)});";
-        Console.WriteLine(query);
+        return await ExecuteAsync(query);
     }
 
-    public void Select(TModel obj)
+    #endregion
+
+    #region Selecting
+
+    public async Task<IEnumerable<dynamic>> Select(TModel obj)
     {
         var query = CreateQuery("SELECT *", CreateFilter(obj));
-        Console.WriteLine(query);
+        return await QueryAsync(query);
     }
 
-    public void Select(string queryCondition = "")
+    public async Task<IEnumerable<dynamic>> Select(string queryCondition = "")
     {
         var query = CreateQuery("SELECT *", queryCondition);
-        Console.WriteLine(query);
+        return await QueryAsync(query);
     }
 
-    public void Delete(TModel obj)
+    #endregion
+
+    #region Deleting
+
+    public async Task<int> Delete(TModel obj)
     {
         var query = CreateQuery("DELETE", CreateFilter(obj));
-        Console.WriteLine(query);
+        return await ExecuteAsync(query);
     }
 
-    public void Delete(string queryCondition = "")
+    public async Task<int> Delete(string queryCondition = "")
     {
         var query = CreateQuery("DELETE", queryCondition);
-        Console.WriteLine(query);
+        return await ExecuteAsync(query);
     }
+
+    #endregion
+
+    /*
+     * UTILS
+     */
+
+    #region OrmUtils
 
     private string CreateFilter(TModel obj)
     {
@@ -134,7 +165,7 @@ public class DataBaseModel<TModel>
             {
                 condition += $"'{propertyInfo.PropertyType.GetProperty("Value").GetValue(propertyInfo.GetValue(obj))}'";
             }
-            else if (SqlType.ToSqlType(propertyInfo.PropertyType) != "")
+            else if (SqlType.IsConvertableSqlType(propertyInfo))
             {
                 condition += $"'{propertyInfo.GetValue(obj)}'";
             }
@@ -169,16 +200,26 @@ public class DataBaseModel<TModel>
 
         return string.Join(", ", columns);
     }
-    
-    private async Task<int> ExecuteAsync(string query) 
+
+    #endregion
+
+    /*
+     * POSTGRES
+     */
+
+    #region PostGresExecutors
+
+    private async Task<int> ExecuteAsync(string query)
         => await ExecuteAsync(query, null);
 
-    private async Task<int> ExecuteAsync(string query, object? param) 
+    private async Task<int> ExecuteAsync(string query, object? param)
         => await Connection.ExecuteAsync(query, param);
 
     private async Task<IEnumerable<dynamic>> QueryAsync(string query)
         => await QueryAsync(query, null);
 
-    private async Task<IEnumerable<dynamic>> QueryAsync(string query, object? param) 
+    private async Task<IEnumerable<dynamic>> QueryAsync(string query, object? param)
         => await Connection.QueryAsync(query, param);
+
+    #endregion
 }

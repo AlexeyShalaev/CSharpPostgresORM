@@ -1,6 +1,6 @@
-namespace CSharpPostgresORM.Attributes;
+﻿namespace CSharpPostgresORM.Attributes;
 
-internal sealed class ColumnLength : Attribute
+public sealed class ColumnLength : Attribute
 {
     public int Length { get; set; }
 

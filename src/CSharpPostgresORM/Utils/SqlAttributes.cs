@@ -3,7 +3,7 @@ using CSharpPostgresORM.Attributes;
 
 namespace CSharpPostgresORM.Utils;
 
-internal static class Attributes
+internal static class SqlAttributes
 {
     private const int DefaultVarcharLength = 255;
 

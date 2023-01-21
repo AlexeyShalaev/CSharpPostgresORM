@@ -1,13 +1,14 @@
-namespace CSharpPostgresORM.SqlTypes.Numeric;
-
-public class Integer : ISqlType<int>
+namespace CSharpPostgresORM.SqlTypes
 {
-    public int Value { get; set; }
-
-    public static readonly string SqlTypeName = "INTEGER";
-
-    public static implicit operator Integer(int value)
+    public class Integer : ISqlType<int>
     {
-        return new Integer { Value = value };
+        public int Value { get; set; }
+
+        public static readonly string SqlTypeName = "INTEGER";
+
+        public static implicit operator Integer(int value)
+        {
+            return new Integer { Value = value };
+        }
     }
 }

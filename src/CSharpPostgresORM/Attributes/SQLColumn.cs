@@ -1,6 +1,6 @@
-namespace CSharpPostgresORM.Attributes;
+﻿namespace CSharpPostgresORM.Attributes;
 
-internal sealed class SqlColumn : Attribute
+public sealed class SqlColumn : Attribute
 {
     public string Flag { get; set; }
 

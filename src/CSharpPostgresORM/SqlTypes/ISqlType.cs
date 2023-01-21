@@ -1,8 +1,8 @@
-﻿namespace CSharpPostgresORM;
+﻿namespace CSharpPostgresORM.SqlTypes;
 
 public interface ISqlType
 {
-    public static string SqlTypeName;
+    public static string? SqlTypeName;
 }
 
 public interface ISqlType<T> : ISqlType

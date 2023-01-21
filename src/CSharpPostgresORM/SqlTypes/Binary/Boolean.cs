@@ -1,13 +1,14 @@
-namespace CSharpPostgresORM.SqlTypes.Binary;
-
-public class Boolean : ISqlType<bool>
+namespace CSharpPostgresORM.SqlTypes
 {
-    public bool Value { get; set; }
-
-    public static string SqlTypeName = "BOOLEAN";
-
-    public static implicit operator Boolean(bool value)
+    public class Boolean : ISqlType<bool>
     {
-        return new Boolean { Value = value };
+        public bool Value { get; set; }
+
+        public static string SqlTypeName = "BOOLEAN";
+
+        public static implicit operator Boolean(bool value)
+        {
+            return new Boolean { Value = value };
+        }
     }
 }

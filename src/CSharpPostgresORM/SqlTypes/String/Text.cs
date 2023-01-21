@@ -1,4 +1,4 @@
-﻿namespace CSharpPostgresORM.SqlTypes.String
+﻿namespace CSharpPostgresORM.SqlTypes
 {
     public class Text : ISqlType<string>
     {

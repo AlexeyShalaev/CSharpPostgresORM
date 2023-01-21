@@ -1,13 +1,14 @@
-﻿namespace CSharpPostgresORM.SqlTypes.Numeric;
-
-public class BigSerial : ISqlType<ulong>
+﻿namespace CSharpPostgresORM.SqlTypes
 {
-    public ulong Value { get; set; }
-
-    public static readonly string SqlTypeName = "BIGSERIAL";
-
-    public static implicit operator BigSerial(ulong value)
+    public class BigSerial : ISqlType<ulong>
     {
-        return new BigSerial { Value = value };
+        public ulong Value { get; set; }
+
+        public static readonly string SqlTypeName = "BIGSERIAL";
+
+        public static implicit operator BigSerial(ulong value)
+        {
+            return new BigSerial { Value = value };
+        }
     }
 }

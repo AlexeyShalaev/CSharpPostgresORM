@@ -1,4 +1,4 @@
-﻿namespace CSharpPostgresORM.SqlTypes.Binary
+﻿namespace CSharpPostgresORM.SqlTypes
 {
     public class Bit : ISqlType<bool>
     {

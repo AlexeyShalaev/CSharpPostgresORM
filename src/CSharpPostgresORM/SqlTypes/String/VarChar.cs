@@ -1,13 +1,14 @@
-﻿namespace CSharpPostgresORM.SqlTypes.String;
-
-public class VarChar : ISqlType<string>
+﻿namespace CSharpPostgresORM.SqlTypes
 {
-    public string Value { get; set; }
-
-    public static readonly string SqlTypeName = "VARCHAR";
-
-    public static implicit operator VarChar(string value)
+    public class VarChar : ISqlType<string>
     {
-        return new VarChar { Value = value };
+        public string Value { get; set; }
+
+        public static readonly string SqlTypeName = "VARCHAR";
+
+        public static implicit operator VarChar(string value)
+        {
+            return new VarChar { Value = value };
+        }
     }
 }

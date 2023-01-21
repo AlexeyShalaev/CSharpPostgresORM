@@ -1,4 +1,4 @@
-﻿namespace CSharpPostgresORM.SqlTypes.Numeric
+﻿namespace CSharpPostgresORM.SqlTypes
 {
     public class Numeric : ISqlType<decimal>
     {
