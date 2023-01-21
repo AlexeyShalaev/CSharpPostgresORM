@@ -1,7 +1,8 @@
-﻿namespace DefaultNamespace;
+﻿namespace CSharpPostgresORM;
 
 class DataBaseModel<TModel>
 {
+    public string connectionString { get; set; }
     public string TableName { get; set; }
 
     public DataBaseModel(string tableName)
@@ -35,7 +36,7 @@ class DataBaseModel<TModel>
                 var columnType = propertyInfo.PropertyType.GetField("SqlTypeName").GetValue(propertyInfo.PropertyType);
                 if (columnType.ToString().StartsWith("VARCHAR"))
                 {
-                    columnType += $"({GetLengthAttribute(propertyInfo)})";
+                    columnType += $"({Attributes.GetColumnLengthAttribute(propertyInfo)})";
                 }
 
                 columns.Add(
@@ -100,11 +101,6 @@ class DataBaseModel<TModel>
         Console.WriteLine(query);
     }
 
-
-    /*
-     * UTILS BLOCK
-     */
-
     private string CreateFilter(TModel obj)
     {
         var conditions = new List<string>();
@@ -149,73 +145,5 @@ class DataBaseModel<TModel>
         }
 
         return string.Join(", ", columns);
-    }
-
-    private static string GetFlags(PropertyInfo propertyInfo)
-    {
-        var flags = "";
-        foreach (var attr in propertyInfo.GetCustomAttributes(true))
-        {
-            var sqlAttr = attr as SQLColumn;
-            if (sqlAttr != null)
-            {
-                flags += sqlAttr.Flag;
-            }
-        }
-
-        return flags;
-    }
-
-    private static int GetLengthAttribute(PropertyInfo propertyInfo)
-    {
-        foreach (var attr in propertyInfo.GetCustomAttributes(true))
-        {
-            var sqlAttr = attr as ColumnLength;
-            if (sqlAttr != null)
-            {
-                return sqlAttr.Length;
-            }
-        }
-
-        return 255;
-    }
-
-    private bool IsISqlType(PropertyInfo propertyInfo)
-    {
-        //return propertyInfo.PropertyType.GetInterfaces().Contains(typeof(ISqlType));
-        return typeof(ISqlType).IsAssignableFrom(propertyInfo.PropertyType);
-    }
-
-    private static string ToSqlType(Type type)
-    {
-        var typeCode = Type.GetTypeCode(type);
-        var name = "";
-
-        switch (typeCode)
-        {
-            case TypeCode.Byte:
-            case TypeCode.SByte:
-            case TypeCode.UInt16:
-            case TypeCode.UInt32:
-            case TypeCode.UInt64:
-            case TypeCode.Int16:
-            case TypeCode.Int32:
-            case TypeCode.Int64:
-                name = "INTEGER";
-                break;
-            case TypeCode.Boolean:
-                name = "BOOLEAN";
-                break;
-            case TypeCode.Decimal:
-            case TypeCode.Double:
-            case TypeCode.Single:
-                name = "DECIMAL";
-                break;
-            case TypeCode.String:
-                name = "TEXT";
-                break;
-        }
-
-        return name;
     }
 }
