@@ -1,4 +1,6 @@
-﻿namespace DefaultNamespace;
+﻿using System.Reflection;
+
+namespace CSharpPostgresORM;
 
 class DataBaseModel<TModel>
 {
