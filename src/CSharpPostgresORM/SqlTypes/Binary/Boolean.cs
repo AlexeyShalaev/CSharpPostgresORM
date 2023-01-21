@@ -1,4 +1,4 @@
-﻿namespace CSharpPostgresORM;
+﻿namespace CSharpPostgresORM.SqlTypes.Binary;
 
 public class Boolean : ISqlType<bool>
 {
