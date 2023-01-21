@@ -12,13 +12,15 @@ public class DataBaseModel<TModel>
     
     public string SchemaName { get; set; }
     
-    public Npgsql.NpgsqlConnection Connection { get; set; }
+    public NpgsqlConnection Connection { get; set; }
 
     public DataBaseModel(string connectionString, string tableName, string schemaName = "public")
     {
         TableName = tableName;
         SchemaName = schemaName;
         Connection = new NpgsqlConnection(connectionString);
+
+        _connectionString = connectionString;
         
         foreach (var propertyInfo in typeof(TModel).GetProperties())
         {
@@ -51,7 +53,7 @@ public class DataBaseModel<TModel>
             if (IsISqlType(propertyInfo))
             {
                 var columnType = propertyInfo.PropertyType
-                    .GetField("SqlTypeName").GetValue(propertyInfo.PropertyType);
+                    .GetField("SqlTypeName")!.GetValue(propertyInfo.PropertyType);
                 if (columnType.ToString().StartsWith("VARCHAR"))
                 {
                     columnType += $"({GetLengthAttribute(propertyInfo)})";
