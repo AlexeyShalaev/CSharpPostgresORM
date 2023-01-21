@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharpPostgresORM", "CSharpPostgresORM.csproj", "{97E6F86A-E2DD-413D-8532-6DEC998120EB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharpPostgresORM", "CSharpPostgresORM/CSharpPostgresORM.csproj", "{97E6F86A-E2DD-413D-8532-6DEC998120EB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
