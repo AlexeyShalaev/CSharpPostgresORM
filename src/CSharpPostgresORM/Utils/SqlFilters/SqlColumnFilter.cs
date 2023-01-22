@@ -28,4 +28,19 @@ public class SqlColumnFilter
     {
         return new SqlFilter($"{columnFilter.Name} != '{val}'");
     }
+
+    public SqlFilter Contains(object val)
+    {
+        return new SqlFilter($"{Name} LIKE '%{val}%'");
+    }
+    
+    public SqlFilter StartsWith(object val)
+    {
+        return new SqlFilter($"{Name} LIKE '{val}%'");
+    }
+    
+    public SqlFilter FinishesWith(object val)
+    {
+        return new SqlFilter($"{Name} LIKE '%{val}'");
+    }
 }
