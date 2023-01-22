@@ -100,18 +100,30 @@ public class DataBaseModel<TModel>
         {
             if (SqlType.IsISqlType(propertyInfo))
             {
-                values.Add($"'{propertyInfo.PropertyType.GetProperty("Value").GetValue(propertyInfo.GetValue(obj))}'");
+                if (propertyInfo.GetValue(obj) is null)
+                {
+                    values.Add($"DEFAULT");
+                }
+                else
+                {
+                    values.Add(
+                        $"'{propertyInfo.PropertyType.GetProperty("Value").GetValue(propertyInfo.GetValue(obj))}'");
+                }
             }
             else if (SqlType.IsConvertableSqlType(propertyInfo))
             {
                 values.Add($"'{propertyInfo.GetValue(obj)}'");
+                //TODO: if default variable
             }
-
-            throw new PostgresOrmException($"Can't get value from property {propertyInfo}");
+            else
+            {
+                throw new PostgresOrmException($"Can't get value from property {propertyInfo}");
+            }
         }
 
         var query =
             $"INSERT INTO {SchemaName}.{TableName}({GetColumns()}) VALUES({string.Join(", ", values)});";
+        Console.WriteLine(query);
         return await ExecuteAsync(query);
     }
 
@@ -122,12 +134,14 @@ public class DataBaseModel<TModel>
     public async Task<IEnumerable<dynamic>> Select(TModel obj)
     {
         var query = CreateQuery("SELECT *", CreateFilter(obj));
+        Console.WriteLine(query);
         return await QueryAsync(query);
     }
 
     public async Task<IEnumerable<dynamic>> Select(string queryCondition = "")
     {
         var query = CreateQuery("SELECT *", queryCondition);
+        Console.WriteLine(query);
         return await QueryAsync(query);
     }
 
@@ -163,11 +177,20 @@ public class DataBaseModel<TModel>
             var condition = $"{propertyInfo.Name} = ";
             if (SqlType.IsISqlType(propertyInfo))
             {
-                condition += $"'{propertyInfo.PropertyType.GetProperty("Value").GetValue(propertyInfo.GetValue(obj))}'";
+                if (propertyInfo.GetValue(obj) is not null)
+                {
+                    condition +=
+                        $"'{propertyInfo.PropertyType.GetProperty("Value").GetValue(propertyInfo.GetValue(obj))}'";
+                }
+                else
+                {
+                    continue;
+                }
             }
             else if (SqlType.IsConvertableSqlType(propertyInfo))
             {
                 condition += $"'{propertyInfo.GetValue(obj)}'";
+                //TODO: if default variable
             }
             else
             {
@@ -184,10 +207,10 @@ public class DataBaseModel<TModel>
     {
         if (filter == "")
         {
-            return $"{command} FROM public.{TableName};";
+            return $"{command} FROM {SchemaName}.{TableName};";
         }
 
-        return $"{command} FROM public.{TableName} WHERE {filter};";
+        return $"{command} FROM {SchemaName}.{TableName} WHERE {filter};";
     }
 
     private string GetColumns()

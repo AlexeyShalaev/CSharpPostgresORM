@@ -12,6 +12,7 @@ internal static class SqlType
         return typeof(ISqlType).IsAssignableFrom(propertyInfo.PropertyType);
     }
 
+
     public static bool IsConvertableSqlType(PropertyInfo propertyInfo)
     {
         var typeCode = Type.GetTypeCode(propertyInfo.PropertyType);
@@ -51,6 +52,9 @@ internal static class SqlType
         {
             case TypeCode.Byte:
             case TypeCode.SByte:
+                return Binary.SqlTypeName;
+            case TypeCode.Boolean:
+                return Boolean.SqlTypeName;
             case TypeCode.UInt16:
             case TypeCode.UInt32:
             case TypeCode.UInt64:
@@ -58,8 +62,7 @@ internal static class SqlType
             case TypeCode.Int32:
             case TypeCode.Int64:
                 return Integer.SqlTypeName;
-            case TypeCode.Boolean:
-                return Boolean.SqlTypeName;
+
             case TypeCode.Decimal:
             case TypeCode.Double:
             case TypeCode.Single:
