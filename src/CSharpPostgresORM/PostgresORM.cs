@@ -1,4 +1,5 @@
 using CSharpPostgresORM.Utils;
+using CSharpPostgresORM.Utils.SqlFilters;
 using Dapper;
 using Npgsql;
 
@@ -131,6 +132,16 @@ public class DataBaseModel<TModel>
 
     #region Selecting
 
+    public SqlColumnFilter this[string columnName] => new SqlColumnFilter(columnName);
+
+    public async Task<IEnumerable<TModel>> Select(SqlFilter filter)
+    {
+        var query = CreateQuery("SELECT *", filter.ToString());
+        Console.WriteLine(query);
+        return await QueryAsync(query);
+    }
+
+
     public async Task<IEnumerable<TModel>> Select(TModel obj)
     {
         var query = CreateQuery("SELECT *", CreateFilter(obj));
@@ -148,6 +159,12 @@ public class DataBaseModel<TModel>
     #endregion
 
     #region Deleting
+
+    public async Task<int> Delete(SqlFilter filter)
+    {
+        var query = CreateQuery("DELETE", filter.ToString());
+        return await ExecuteAsync(query);
+    }
 
     public async Task<int> Delete(TModel obj)
     {
