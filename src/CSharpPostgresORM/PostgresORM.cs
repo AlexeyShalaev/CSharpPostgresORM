@@ -131,14 +131,14 @@ public class DataBaseModel<TModel>
 
     #region Selecting
 
-    public async Task<IEnumerable<dynamic>> Select(TModel obj)
+    public async Task<IEnumerable<TModel>> Select(TModel obj)
     {
         var query = CreateQuery("SELECT *", CreateFilter(obj));
         Console.WriteLine(query);
         return await QueryAsync(query);
     }
 
-    public async Task<IEnumerable<dynamic>> Select(string queryCondition = "")
+    public async Task<IEnumerable<TModel>> Select(string queryCondition = "")
     {
         var query = CreateQuery("SELECT *", queryCondition);
         Console.WriteLine(query);
@@ -238,11 +238,11 @@ public class DataBaseModel<TModel>
     private async Task<int> ExecuteAsync(string query, object? param)
         => await Connection.ExecuteAsync(query, param);
 
-    private async Task<IEnumerable<dynamic>> QueryAsync(string query)
+    private async Task<IEnumerable<TModel>> QueryAsync(string query)
         => await QueryAsync(query, null);
 
-    private async Task<IEnumerable<dynamic>> QueryAsync(string query, object? param)
-        => await Connection.QueryAsync(query, param);
+    private async Task<IEnumerable<TModel>> QueryAsync(string query, object? param)
+        => await Connection.QueryAsync<TModel>(query, param);
 
     #endregion
 }
