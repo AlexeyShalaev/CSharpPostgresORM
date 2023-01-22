@@ -1,12 +1,12 @@
 ﻿namespace CSharpPostgresORM.SqlTypes
 {
-    public class BigSerial : ISqlType<ulong>
+    public class BigSerial : ISqlType<long>
     {
-        public ulong Value { get; set; }
+        public long Value { get; set; }
 
         public static readonly string SqlTypeName = "BIGSERIAL";
 
-        public static implicit operator BigSerial(ulong value)
+        public static implicit operator BigSerial(long value)
         {
             return new BigSerial { Value = value };
         }
