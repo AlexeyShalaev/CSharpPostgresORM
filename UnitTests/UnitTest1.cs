@@ -4,7 +4,7 @@ namespace UnitTests;
 
 public class Tests
 {
-    private string _connectionString = "Server = localhost;" +
+    private string _connectionString = "Server = 192.168.1.57;" +
                                        "Username=test;" +
                                        "Password=test;" +
                                        "Database=test;";
@@ -39,13 +39,13 @@ public class Tests
 
         var selectQuery1 = await users.Select(users["Name"] == "Alex" | users["isTeacher"] == true);
         Assert.That(selectQuery1.Count(), Is.EqualTo(2)); // TODO compare actual data
-        
+
         var selectQuery2 = await users.Select(users["Name"].Contains("18") & users["isTeacher"] == true);
         Assert.That(selectQuery2.Count(), Is.EqualTo(1)); // TODO compare actual data
-        
+
         var selectQuery3 = await users.Select(users["Name"].FinishesWith("18") & users["isTeacher"] != false);
         Assert.That(selectQuery3.Count(), Is.EqualTo(1)); // TODO compare actual data
-        
+
         var selectQuery4 = await users.Select(users["Name"].StartsWith("Otter"));
         Assert.That(selectQuery4.Count(), Is.EqualTo(1)); // TODO compare actual data
 
@@ -70,11 +70,11 @@ public class Tests
 
         // ----------- select -----------
 
-        // All
+        // Select all
         var selectAll = await users.Select();
         Assert.That(selectAll.Count(), Is.EqualTo(2)); // TODO compare actual data 
 
-        // Definite
+        // Definite object
         var selectUser1 = await users.Select(user1);
         Assert.That(selectUser1.Count(), Is.EqualTo(1)); // TODO compare actual data 
 
