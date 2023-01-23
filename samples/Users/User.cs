@@ -1,11 +1,15 @@
-﻿namespace UsersSampleCode;
+﻿using CSharpPostgresORM.Attributes;
+using CSharpPostgresORM.SqlTypes;
+using Boolean = CSharpPostgresORM.SqlTypes.Boolean;
+
+namespace UsersClassSample;
 
 public class User
 {
-    [SQLColumn("PRIMARY KEY")] public BigSerial Id { get; set; }
+    [SqlColumn("PRIMARY KEY")] public BigSerial Id { get; set; }
 
-    [SQLColumn("NOT NULL"), ColumnLength(32)]
-    public Varchar Name { get; set; }
+    [SqlColumn("NOT NULL"), ColumnLength(32)]
+    public VarChar Name { get; set; }
 
-    public bool isTeacher { get; set; }
+    public Boolean IsTeacher { get; set; }
 }

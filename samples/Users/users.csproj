@@ -5,4 +5,8 @@
         <OutputType>Exe</OutputType>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\..\src\CSharpPostgresORM\CSharpPostgresORM.csproj" />
+    </ItemGroup>
+
 </Project>
