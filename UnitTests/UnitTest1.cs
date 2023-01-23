@@ -4,7 +4,7 @@ namespace UnitTests;
 
 public class Tests
 {
-    private string _connectionString = "Server = 192.168.1.57;" +
+    private string _connectionString = "Server=localhost;" +
                                        "Username=test;" +
                                        "Password=test;" +
                                        "Database=test;";
