@@ -25,10 +25,10 @@ public class Tests
         // testing filters combinations in general
         var filter1 = users["Name"] == "Chase" &
                       users["Gender"] != "female" &
-                      (users["Age"] > 40 | users["Age"] < 80);
+                      (users["Age"] < 40 | users["Age"] > 80);
         Console.WriteLine(filter1);
         Assert.That(filter1.ToString(),
-            Is.EqualTo("((Name = 'Chase' AND Gender != 'female') AND (Age > '40' OR Age < '80'))"));
+            Is.EqualTo("((Name = 'Chase' AND Gender != 'female') AND (Age < '40' OR Age > '80'))"));
 
 
         // testing in select query
