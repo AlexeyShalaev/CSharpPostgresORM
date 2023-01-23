@@ -1,4 +1,4 @@
-using CSharpPostgresORM;
+using PostgresORM;
 
 namespace UnitTests;
 

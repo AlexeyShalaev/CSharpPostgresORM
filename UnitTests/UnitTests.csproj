@@ -17,7 +17,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\src\CSharpPostgresORM\CSharpPostgresORM.csproj" />
+      <ProjectReference Include="..\src\PostgresORM\PostgresORM.csproj" />
     </ItemGroup>
 
 </Project>
