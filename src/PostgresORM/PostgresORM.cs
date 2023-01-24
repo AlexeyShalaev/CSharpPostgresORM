@@ -15,6 +15,15 @@ public class DataBaseModel<TModel>
 
     public NpgsqlConnection Connection { get; set; }
 
+    public static async Task<DataBaseModel<TModel>> CreateAsync(string server, string username, string password,
+        string database, string tableName, string schemaName = "public")
+    {
+        var connectionString = $"Server={server};Username={username};Password={password};Database={database};";
+        var dataBaseModel = new DataBaseModel<TModel>(connectionString, tableName, schemaName);
+        await dataBaseModel.InitializeAsync();
+        return dataBaseModel;
+    }
+
     public static async Task<DataBaseModel<TModel>> CreateAsync(string connectionString, string tableName,
         string schemaName = "public")
     {
