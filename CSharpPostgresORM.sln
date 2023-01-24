@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{D8C36468-1AAF-4A60-8095-430CD62522E0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UsersClassSample", "samples\UsersClassSample\UsersClassSample.csproj", "{B811E1FA-CB3A-4CDD-9924-65B4DD0ABD52}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PostgresORM", "src\PostgresORM\PostgresORM.csproj", "{C5D18E07-DCFF-4A11-A553-A9519F91DFF6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D8C36468-1AAF-4A60-8095-430CD62522E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D8C36468-1AAF-4A60-8095-430CD62522E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D8C36468-1AAF-4A60-8095-430CD62522E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D8C36468-1AAF-4A60-8095-430CD62522E0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B811E1FA-CB3A-4CDD-9924-65B4DD0ABD52}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B811E1FA-CB3A-4CDD-9924-65B4DD0ABD52}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B811E1FA-CB3A-4CDD-9924-65B4DD0ABD52}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B811E1FA-CB3A-4CDD-9924-65B4DD0ABD52}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C5D18E07-DCFF-4A11-A553-A9519F91DFF6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C5D18E07-DCFF-4A11-A553-A9519F91DFF6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C5D18E07-DCFF-4A11-A553-A9519F91DFF6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C5D18E07-DCFF-4A11-A553-A9519F91DFF6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

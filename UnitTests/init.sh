@@ -1,0 +1,1 @@
+docker run --rm --detach --name postgres-test-db --publish 5432:5432 --env "POSTGRES_DB=test"  --env "POSTGRES_USER=test" --env "POSTGRES_PASSWORD=test"  postgres
