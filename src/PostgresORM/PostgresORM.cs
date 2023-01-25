@@ -120,7 +120,7 @@ public class DataBaseModel<TModel>
             if (SqlType.IsISqlType(propertyInfo))
             {
                 var columnType = propertyInfo.PropertyType.GetField("SqlTypeName")!.GetValue(propertyInfo.PropertyType);
-                if (columnType is "JSON")
+                if (columnType is "JSONB")
                 {
                     if (propertyInfo.GetValue(obj) is null)
                     {
@@ -234,14 +234,30 @@ public class DataBaseModel<TModel>
             var condition = $"{propertyInfo.Name} = ";
             if (SqlType.IsISqlType(propertyInfo))
             {
-                if (propertyInfo.GetValue(obj) is not null)
+                var columnType = propertyInfo.PropertyType.GetField("SqlTypeName")!.GetValue(propertyInfo.PropertyType);
+                if (columnType is "JSONB")
                 {
-                    condition +=
-                        $"'{propertyInfo.PropertyType.GetProperty("Value").GetValue(propertyInfo.GetValue(obj))}'";
+                    if (propertyInfo.GetValue(obj) is not null)
+                    {
+                        var value = propertyInfo.PropertyType.GetProperty("Value").GetValue(propertyInfo.GetValue(obj));
+                        condition += $"'{JsonSerializer.Serialize(value)}'";
+                    }
+                    else
+                    {
+                        continue;
+                    }
                 }
                 else
                 {
-                    continue;
+                    if (propertyInfo.GetValue(obj) is not null)
+                    {
+                        condition +=
+                            $"'{propertyInfo.PropertyType.GetProperty("Value").GetValue(propertyInfo.GetValue(obj))}'";
+                    }
+                    else
+                    {
+                        continue;
+                    }
                 }
             }
             else if (SqlType.IsConvertableSqlType(propertyInfo))

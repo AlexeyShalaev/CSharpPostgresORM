@@ -1,10 +1,12 @@
-﻿namespace PostgresORM.SqlTypes.String;
+﻿using System.Text.Json;
+
+namespace PostgresORM.SqlTypes.String;
 
 public class Json<T> : ISqlType<T>
 {
     public T Value { get; set; }
 
-    public static readonly string SqlTypeName = "JSON";
+    public static readonly string SqlTypeName = "JSONB";
 
     public Json(T value)
     {
@@ -14,5 +16,10 @@ public class Json<T> : ISqlType<T>
     public static implicit operator Json<T>(T value)
     {
         return new Json<T>(value);
+    }
+
+    public static implicit operator Json<T?>(string value)
+    {
+        return new Json<T?>(JsonSerializer.Deserialize<T>(value));
     }
 }

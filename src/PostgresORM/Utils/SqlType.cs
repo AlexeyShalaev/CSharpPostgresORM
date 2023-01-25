@@ -9,15 +9,119 @@ using Decimal = PostgresORM.SqlTypes.Numeric.Decimal;
 
 namespace PostgresORM.Utils;
 
-internal static class SqlType
+public static class SqlType
 {
+    //Public Methods
     public static bool IsISqlType(PropertyInfo propertyInfo)
     {
         return typeof(ISqlType).IsAssignableFrom(propertyInfo.PropertyType);
     }
 
+    public static string CreateSqlTypeTemplate(string className, string typeName, bool fileMode = false)
+    {
+        var template = $@"
+                public class {className} : ISqlType<{typeName}>
+                {{
+                    // Fields and Properties
+                    public {typeName} Value {{ get; set; }}
 
-    public static bool IsConvertableSqlType(PropertyInfo propertyInfo)
+                    public static readonly string SqlTypeName = ""{typeName.ToUpper()}"";
+
+                    // Castings
+
+                    public static implicit operator {className}({typeName} value)
+                    {{
+                        return new {className} {{ Value = value }};
+                    }}
+
+                    public static implicit operator {typeName}({className} {className.ToLower()})
+                    {{
+                        return {className.ToLower()}.Value;
+                    }}
+
+                    // Other overloads
+
+                    public override string ToString()
+                    {{
+                        return Value.ToString();
+                    }}
+
+                    public bool Equals({className} rhs)
+                    {{
+                        return Value == rhs.Value;
+                    }}
+
+                    public int CompareTo({className} rhs)
+                    {{
+                        throw new NotImplementedException();
+                    }}
+
+                    // Comparing
+
+                    public static bool operator >({className} lhs, {className} rhs)
+                    {{
+                        throw new NotImplementedException();
+                    }}
+
+                    public static bool operator <({className} lhs, {className} rhs)
+                    {{
+                        throw new NotImplementedException();
+                    }}
+
+                    public static bool operator >=({className} lhs, {className} rhs)
+                    {{
+                        throw new NotImplementedException();
+                    }}
+
+                    public static bool operator <=({className} lhs, {className} rhs)
+                    {{
+                        throw new NotImplementedException();
+                    }}
+
+                    public static bool operator ==({className} lhs, {className} rhs)
+                    {{
+                        throw new NotImplementedException();
+                    }}
+
+                    public static bool operator !=({className} lhs, {className} rhs)
+                    {{
+                        throw new NotImplementedException();
+                    }}
+
+                    // Unary
+
+                    public static {className} operator ++({className} {className.ToLower()}) => throw new NotImplementedException();
+
+                    public static {className} operator --({className} {className.ToLower()}) => throw new NotImplementedException();
+
+                    public static {className} operator +({className} {className.ToLower()}) => throw new NotImplementedException();
+
+                    public static {className} operator -({className} {className.ToLower()}) => throw new NotImplementedException();
+
+                    // Binary
+
+                    public static {className} operator +({className} lhs, {className} rhs) => throw new NotImplementedException();
+
+                    public static {className} operator -({className} lhs, {className} rhs) => throw new NotImplementedException();
+
+                    public static {className} operator *({className} lhs, {className} rhs) => throw new NotImplementedException();
+
+                    public static {className} operator /({className} lhs, {className} rhs) => throw new NotImplementedException();
+
+                    public static {className} operator %({className} lhs, {className} rhs) => throw new NotImplementedException();
+                }}    
+        ";
+        if (fileMode)
+        {
+            File.WriteAllText($"{className}.cs", template);
+        }
+
+        return template;
+    }
+
+    //Internal Methods
+
+    internal static bool IsConvertableSqlType(PropertyInfo propertyInfo)
     {
         if (!propertyInfo.PropertyType.IsTypeDefinition)
         {
@@ -59,13 +163,12 @@ internal static class SqlType
         return false;
     }
 
-    public static bool IsSqlType(PropertyInfo propertyInfo)
+    internal static bool IsSqlType(PropertyInfo propertyInfo)
     {
         return IsISqlType(propertyInfo) || IsConvertableSqlType(propertyInfo);
     }
 
-
-    public static string GetSqlTypeName(Type type)
+    internal static string GetSqlTypeName(Type type)
     {
         var typeCode = GetTypeCode(type);
 
@@ -77,24 +180,28 @@ internal static class SqlType
             case TypeCode.Boolean:
                 return Boolean.SqlTypeName;
             case TypeCode.UInt16:
-            case TypeCode.UInt32:
-            case TypeCode.UInt64:
-            case TypeCode.Int16:
-            case TypeCode.Int32:
-            case TypeCode.Int64:
                 return Integer.SqlTypeName;
-
+            case TypeCode.UInt32:
+                return BigInteger.SqlTypeName;
+            case TypeCode.Int16:
+                return SmallInteger.SqlTypeName;
+            case TypeCode.Int32:
+                return Integer.SqlTypeName;
+            case TypeCode.Int64:
+                return BigInteger.SqlTypeName;
             case TypeCode.Decimal:
             case TypeCode.Double:
-            case TypeCode.Single:
                 return Decimal.SqlTypeName;
+            case TypeCode.Single:
+                return Real.SqlTypeName;
             case TypeCode.String:
                 return VarChar.SqlTypeName;
         }
 
-        return Json<TypeCode>.SqlTypeName;
-        throw new PostgresOrmException("Unknown SQL Type");
+        throw new PostgresOrmException($"Unknown SQL Type: {type}");
     }
+
+    //Private Methods
 
     private static TypeCode GetTypeCode(Type type)
     {
