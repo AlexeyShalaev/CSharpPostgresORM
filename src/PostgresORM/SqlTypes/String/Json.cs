@@ -1,20 +1,18 @@
-﻿using System.Text.Json;
+﻿namespace PostgresORM.SqlTypes.String;
 
-namespace PostgresORM.SqlTypes.String;
-
-public class Json<T> : ISqlType<string>
+public class Json<T> : ISqlType<T>
 {
-    public string Value { get; set; }
+    public T Value { get; set; }
 
-    public static readonly string SqlTypeName = "json";
+    public static readonly string SqlTypeName = "JSON";
 
-    public static implicit operator Json<T>(string value)
+    public Json(T value)
     {
-        return new Json<T> { Value = value };
+        Value = value;
     }
-    
+
     public static implicit operator Json<T>(T value)
     {
-        return new Json<T> { Value = JsonSerializer.Serialize(value) };
+        return new Json<T>(value);
     }
 }
