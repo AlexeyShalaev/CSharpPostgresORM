@@ -2,12 +2,48 @@
 
 public class Binary : ISqlType<byte[]>
 {
+    // Fields and Properties
+
     public byte[] Value { get; set; }
 
-    public static readonly string SqlTypeName = "BINARY";
+    public const string SqlTypeName = "BINARY";
+
+    // Castings
 
     public static implicit operator Binary(byte[] value)
     {
         return new Binary { Value = value };
     }
+
+    public static implicit operator byte[](Binary binary)
+    {
+        return binary.Value;
+    }
+
+    // Other overloads
+
+    public override string ToString()
+    {
+        return string.Join(" ", Value.Select(x => x.ToString()));
+    }
+
+    public bool Equals(Binary rhs)
+    {
+        return Value == rhs.Value;
+    }
+
+    // Comparing - unavailable
+
+    // Unary
+    public static Binary operator ~(Binary binary) => binary.Value.Select(x => (byte)~x).ToArray();
+
+    // Binary
+    public static Binary operator &(Binary lhs, Binary rhs) =>
+        lhs.Value.Zip(rhs.Value, (l, r) => (byte)(l & r)).ToArray();
+
+    public static Binary operator |(Binary lhs, Binary rhs) =>
+        lhs.Value.Zip(rhs.Value, (l, r) => (byte)(l | r)).ToArray();
+
+    public static Binary operator ^(Binary lhs, Binary rhs) =>
+        lhs.Value.Zip(rhs.Value, (l, r) => (byte)(l ^ r)).ToArray();
 }

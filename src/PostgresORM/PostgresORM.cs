@@ -1,5 +1,7 @@
+using System.Text.Json;
 using Dapper;
 using Npgsql;
+using PostgresORM.SqlTypes.String;
 using PostgresORM.Utils;
 using PostgresORM.Utils.SqlFilters;
 
@@ -7,18 +9,35 @@ namespace PostgresORM;
 
 public class DataBaseModel<TModel>
 {
-    private readonly string _connectionString;
-
     public string TableName { get; set; }
 
     public string SchemaName { get; set; }
 
-    public NpgsqlConnection Connection { get; set; }
+    public NpgsqlConnection Connection { get; }
+
+    public static async Task<DataBaseModel<TModel>> CreateAsync(string server, string username, string password,
+        string database, string tableName, string schemaName = "public")
+    {
+        var connectionString = $"Server={server};Username={username};Password={password};Database={database};";
+        var connection = new NpgsqlConnection(connectionString);
+        var dataBaseModel = new DataBaseModel<TModel>(connection, tableName, schemaName);
+        await dataBaseModel.InitializeAsync();
+        return dataBaseModel;
+    }
 
     public static async Task<DataBaseModel<TModel>> CreateAsync(string connectionString, string tableName,
         string schemaName = "public")
     {
-        var dataBaseModel = new DataBaseModel<TModel>(connectionString, tableName, schemaName);
+        var connection = new NpgsqlConnection(connectionString);
+        var dataBaseModel = new DataBaseModel<TModel>(connection, tableName, schemaName);
+        await dataBaseModel.InitializeAsync();
+        return dataBaseModel;
+    }
+
+    public static async Task<DataBaseModel<TModel>> CreateAsync(NpgsqlConnection connection, string tableName,
+        string schemaName = "public")
+    {
+        var dataBaseModel = new DataBaseModel<TModel>(connection, tableName, schemaName);
         await dataBaseModel.InitializeAsync();
         return dataBaseModel;
     }
@@ -29,20 +48,18 @@ public class DataBaseModel<TModel>
         await CreateTable();
     }
 
-    private DataBaseModel(string connectionString, string tableName, string schemaName)
+    private DataBaseModel(NpgsqlConnection connection, string tableName, string schemaName)
     {
         TableName = tableName;
         SchemaName = schemaName;
-        Connection = new NpgsqlConnection(connectionString);
-
-        _connectionString = connectionString;
+        Connection = connection;
 
         foreach (var propertyInfo in typeof(TModel).GetProperties())
         {
             if (!SqlType.IsSqlType(propertyInfo))
             {
                 throw new PostgresOrmException(
-                    $"{typeof(TModel)}'s property {propertyInfo} is not inherited from the interface.");
+                    $"{typeof(TModel)}'s property {propertyInfo} is not inherited from the ISqlType interface or is not a convertible to ISqlType.");
             }
         }
     }
@@ -87,6 +104,7 @@ public class DataBaseModel<TModel>
         }
 
         var query = $"CREATE TABLE IF NOT EXISTS {SchemaName}.{TableName} ({string.Join(", ", columns)});";
+        Console.WriteLine(query);
         return await ExecuteAsync(query);
     }
 
@@ -101,20 +119,42 @@ public class DataBaseModel<TModel>
         {
             if (SqlType.IsISqlType(propertyInfo))
             {
+                var columnType = propertyInfo.PropertyType.GetField("SqlTypeName")!.GetValue(propertyInfo.PropertyType);
+                if (columnType is "JSONB")
+                {
+                    if (propertyInfo.GetValue(obj) is null)
+                    {
+                        values.Add($"DEFAULT");
+                    }
+                    else
+                    {
+                        var value = propertyInfo.PropertyType.GetProperty("Value").GetValue(propertyInfo.GetValue(obj));
+                        values.Add($"'{JsonSerializer.Serialize(value)}'");
+                    }
+                }
+                else
+                {
+                    if (propertyInfo.GetValue(obj) is null)
+                    {
+                        values.Add($"DEFAULT");
+                    }
+                    else
+                    {
+                        values.Add(
+                            $"'{propertyInfo.PropertyType.GetProperty("Value").GetValue(propertyInfo.GetValue(obj))}'");
+                    }
+                }
+            }
+            else if (SqlType.IsConvertableSqlType(propertyInfo))
+            {
                 if (propertyInfo.GetValue(obj) is null)
                 {
                     values.Add($"DEFAULT");
                 }
                 else
                 {
-                    values.Add(
-                        $"'{propertyInfo.PropertyType.GetProperty("Value").GetValue(propertyInfo.GetValue(obj))}'");
+                    values.Add($"'{propertyInfo.GetValue(obj)}'");
                 }
-            }
-            else if (SqlType.IsConvertableSqlType(propertyInfo))
-            {
-                values.Add($"'{propertyInfo.GetValue(obj)}'");
-                //TODO: if default variable
             }
             else
             {
@@ -194,20 +234,37 @@ public class DataBaseModel<TModel>
             var condition = $"{propertyInfo.Name} = ";
             if (SqlType.IsISqlType(propertyInfo))
             {
-                if (propertyInfo.GetValue(obj) is not null)
+                var columnType = propertyInfo.PropertyType.GetField("SqlTypeName")!.GetValue(propertyInfo.PropertyType);
+                if (columnType is "JSONB")
                 {
-                    condition +=
-                        $"'{propertyInfo.PropertyType.GetProperty("Value").GetValue(propertyInfo.GetValue(obj))}'";
+                    if (propertyInfo.GetValue(obj) is not null)
+                    {
+                        var value = propertyInfo.PropertyType.GetProperty("Value").GetValue(propertyInfo.GetValue(obj));
+                        condition += $"'{JsonSerializer.Serialize(value)}'";
+                    }
+                    else
+                    {
+                        continue;
+                    }
                 }
                 else
                 {
-                    continue;
+                    if (propertyInfo.GetValue(obj) is not null)
+                    {
+                        condition +=
+                            $"'{propertyInfo.PropertyType.GetProperty("Value").GetValue(propertyInfo.GetValue(obj))}'";
+                    }
+                    else
+                    {
+                        continue;
+                    }
                 }
             }
             else if (SqlType.IsConvertableSqlType(propertyInfo))
             {
-                condition += $"'{propertyInfo.GetValue(obj)}'";
-                //TODO: if default variable
+                var value = propertyInfo.GetValue(obj);
+                if (value is null) continue;
+                condition += $"'{value}'";
             }
             else
             {
