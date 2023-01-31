@@ -4,6 +4,7 @@ namespace PostgresORM.SqlTypes.String;
 
 public class Json<T> : ISqlType<T>
 {
+    // Fields and Properties
     public T Value { get; set; }
 
     public static readonly string SqlTypeName = "JSONB";
@@ -12,6 +13,8 @@ public class Json<T> : ISqlType<T>
     {
         Value = value;
     }
+    
+    // Castings
 
     public static implicit operator Json<T>(T value)
     {
@@ -21,5 +24,17 @@ public class Json<T> : ISqlType<T>
     public static implicit operator Json<T?>(string value)
     {
         return new Json<T?>(JsonSerializer.Deserialize<T>(value));
+    }
+    
+    public static implicit operator T(Json<T> json)
+    {
+        return json.Value;
+    }
+
+    // Other overloads
+
+    public override string ToString()
+    {
+        return Value.ToString();
     }
 }
