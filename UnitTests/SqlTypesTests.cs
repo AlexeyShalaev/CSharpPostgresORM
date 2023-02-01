@@ -5,7 +5,7 @@ namespace UnitTests;
 public class SqlTypesTests
 {
     [Test]
-    public void SqlFilterTestBoolean()
+    public void Boolean()
     {
         Boolean a = true;
         Boolean b = true;
