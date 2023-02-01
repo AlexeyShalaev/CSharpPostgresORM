@@ -32,7 +32,16 @@ public class Binary : ISqlType<byte[]>
         return Value == rhs.Value;
     }
 
-    // Comparing - unavailable
+    // Comparing
+    public static bool operator ==(Binary lhs, Binary rhs)
+    {
+        return lhs.Value.Length == rhs.Value.Length && lhs.Value.Zip(rhs.Value, (b, b1) => (b, b1)).All(x => x.b == x.b1);
+    }
+
+    public static bool operator !=(Binary lhs, Binary rhs)
+    {
+        return lhs.Value.Length != rhs.Value.Length || lhs.Value.Zip(rhs.Value, (b, b1) => (b, b1)).Any(x => x.b != x.b1);
+    }
 
     // Unary
     public static Binary operator ~(Binary binary) => binary.Value.Select(x => (byte)~x).ToArray();
