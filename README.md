@@ -1,3 +1,3 @@
 # CSharpPostgresORM
 
-Your friendly nearbyhood CSharp Postgres ORM
+Your friendly neighborhood CSharp Postgres ORM
