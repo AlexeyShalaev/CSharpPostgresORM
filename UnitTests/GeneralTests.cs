@@ -2,7 +2,7 @@ using PostgresORM;
 
 namespace UnitTests;
 
-public class Tests
+public class GeneralTests
 {
     private string _connectionString = "Server=localhost;" +
                                        "Username=test;" +
