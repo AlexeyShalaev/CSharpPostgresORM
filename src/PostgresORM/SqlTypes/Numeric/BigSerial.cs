@@ -1,19 +1,19 @@
 ﻿namespace PostgresORM.SqlTypes.Numeric;
 
-public class BigSerial : ISqlType<long>
+public class BigSerial : ISqlType<ulong>
 {
     // Fields and Properties
 
-    public long Value { get; set; }
+    public ulong Value { get; set; }
 
     public const string SqlTypeName = "BIGSERIAL";
 
     // Castings
 
-    public static implicit operator BigSerial(long value)
+    public static implicit operator BigSerial(ulong value)
         => new BigSerial { Value = value };
 
-    public static implicit operator long(BigSerial bigSerial)
+    public static implicit operator ulong(BigSerial bigSerial)
         => bigSerial.Value;
 
     // Other overloads
