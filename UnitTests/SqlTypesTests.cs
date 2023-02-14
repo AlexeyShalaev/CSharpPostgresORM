@@ -19,6 +19,10 @@ public class SqlTypesTests
         Assert.That((bool)(a & c), Is.False);
         Assert.That((bool)~a, Is.False);
         Assert.That((bool)~c, Is.True);
+        
+        Assert.That((bool)(a ^ true), Is.False);
+        Assert.That((bool)(a | false), Is.True);
+        Assert.That((bool)(a & false), Is.False);
     }
 
     [Test]
@@ -33,6 +37,10 @@ public class SqlTypesTests
         Assert.That((bool)(a & c), Is.False);
         Assert.That((bool)~a, Is.False);
         Assert.That((bool)~c, Is.True);
+        
+        Assert.That((bool)(a ^ true), Is.False);
+        Assert.That((bool)(a | false), Is.True);
+        Assert.That((bool)(a & false), Is.False);
     }
 
     [Test]
@@ -45,6 +53,10 @@ public class SqlTypesTests
         Assert.That((a ^ a) == new byte[] { 0, 0, 0, 0 }, Is.True);
         Assert.That((b & c) == new byte[] { 0b0101, 0b1010 }, Is.True);
         Assert.That((b | c) == new byte[] { 0b1111, 0b1111 }, Is.True);
+        
+        Assert.That((a ^ new byte[] { 0, 255, 128, 1 }) == new byte[] { 0, 0, 0, 0 }, Is.True);
+        Assert.That((b & new byte[] { 0b0101, 0b1111 }) == new byte[] { 0b0101, 0b1010 }, Is.True);
+        Assert.That((b | new byte[] { 0b0101, 0b1111 }) == new byte[] { 0b1111, 0b1111 }, Is.True);
     }
 
     #endregion
@@ -105,75 +117,6 @@ public class SqlTypesTests
 
     [Test]
     public void VarChar()
-    {
-    }
-
-    #endregion
-
-    #region CSharpTypes
-
-    [Test]
-    public void CSharpTypeByte()
-    {
-    }
-
-    [Test]
-    public void CSharpTypeSByte()
-    {
-    }
-
-    [Test]
-    public void CSharpTypeUInt16()
-    {
-    }
-
-    [Test]
-    public void CSharpTypeUInt32()
-    {
-    }
-
-    [Test]
-    public void CSharpTypeUInt64()
-    {
-    }
-
-    [Test]
-    public void CSharpTypeInt16()
-    {
-    }
-
-    [Test]
-    public void CSharpTypeInt32()
-    {
-    }
-
-    [Test]
-    public void CSharpTypeInt64()
-    {
-    }
-
-    [Test]
-    public void CSharpTypeBoolean()
-    {
-    }
-
-    [Test]
-    public void CSharpTypeDecimal()
-    {
-    }
-
-    [Test]
-    public void CSharpTypeDouble()
-    {
-    }
-
-    [Test]
-    public void CSharpTypeSingle()
-    {
-    }
-
-    [Test]
-    public void CSharpTypeString()
     {
     }
 
