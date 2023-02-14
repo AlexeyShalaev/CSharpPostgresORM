@@ -1,4 +1,7 @@
 using PostgresORM;
+using Boolean = PostgresORM.SqlTypes.Binary.Boolean;
+using PostgresORM.SqlTypes.String;
+
 
 namespace UnitTests;
 
@@ -27,7 +30,8 @@ public class GeneralTests
                       users["Gender"] != "female" &
                       (users["Age"] < 40 | users["Age"] > 80);
         Console.WriteLine(filter1);
-        Assert.Equals(filter1.ToString(), "((Name = 'Chase' AND Gender != 'female') AND (Age < '40' OR Age > '80'))");
+        Assert.That("((Name = 'Chase' AND Gender != 'female') AND (Age < '40' OR Age > '80'))",
+            Is.EqualTo(filter1.ToString()));
 
 
         // testing in select query
@@ -38,32 +42,32 @@ public class GeneralTests
 
         {
             var selectQuery1 = await users.Select(users["Name"] == "Alex" | users["isTeacher"] == true);
-            Assert.Equals(selectQuery1.Count(), 2);
+            Assert.That(2, Is.EqualTo(selectQuery1.Count()));
             var user1_sq1 = selectQuery1.First();
             var user2_sq1 = selectQuery1.Last();
-            Assert.Equals(user1_sq1, user1);
-            Assert.Equals(user2_sq1, user2);
+            Assert.That(user1, Is.EqualTo(user1_sq1));
+            Assert.That(user2, Is.EqualTo(user2_sq1));
         }
 
         {
             var selectQuery2 = await users.Select(users["Name"].Contains("18") & users["isTeacher"] == true);
-            Assert.Equals(selectQuery2.Count(), 1);
+            Assert.That(1, Is.EqualTo(selectQuery2.Count()));
             var user_sq2 = selectQuery2.First();
-            Assert.Equals(user_sq2, user2);
+            Assert.That(user2, Is.EqualTo(user_sq2));
         }
 
         {
             var selectQuery3 = await users.Select(users["Name"].FinishesWith("18") & users["isTeacher"] != false);
-            Assert.Equals(selectQuery3.Count(), 1);
+            Assert.That(1, Is.EqualTo(selectQuery3.Count()));
             var user_sq3 = selectQuery3.First();
-            Assert.Equals(user_sq3, user2);
+            Assert.That(user2, Is.EqualTo(user_sq3));
         }
 
         {
             var selectQuery4 = await users.Select(users["Name"].StartsWith("Otter"));
-            Assert.Equals(selectQuery4.Count(), 1);
+            Assert.That(1, Is.EqualTo(selectQuery4.Count()));
             var user_sq4 = selectQuery4.First();
-            Assert.Equals(user_sq4, user2);
+            Assert.That(user2, Is.EqualTo(user_sq4));
         }
 
         // testing in delete query
@@ -91,20 +95,20 @@ public class GeneralTests
 
         {
             var selectAll = await users.Select();
-            Assert.Equals(selectAll.Count(), 2);
+            Assert.That(2, Is.EqualTo(selectAll.Count()));
             var user1_sa = selectAll.First();
             var user2_sa = selectAll.Last();
-            Assert.Equals(user1_sa, user1);
-            Assert.Equals(user2_sa, user2);
+            Assert.That(user1, Is.EqualTo(user1_sa));
+            Assert.That(user2, Is.EqualTo(user2_sa));
         }
 
         // Definite object
 
         {
             var selectUser1 = await users.Select(user1);
-            Assert.Equals(selectUser1.Count(), 1);
+            Assert.That(1, Is.EqualTo(selectUser1.Count()));
             var user_su1 = selectUser1.First();
-            Assert.Equals(user_su1, user1);
+            Assert.That(user1, Is.EqualTo(user_su1));
         }
 
         // Empty response
@@ -117,17 +121,17 @@ public class GeneralTests
 
         {
             var selectQuery = await users.Select("Name = 'Otter18'");
-            Assert.Equals(selectQuery.Count(), 1);
+            Assert.That(1, Is.EqualTo(selectQuery.Count()));
             var user_sq = selectQuery.First();
-            Assert.Equals(user_sq, user2);
+            Assert.That(user2, Is.EqualTo(user_sq));
         }
 
         // ----------- update -----------
         await users.Update(user1, ("name", "Aboba"), ("isteacher", "true"));
         var queryResult = await users.Select(users["Id"] == 1);
         var updatedUser1 = queryResult.First();
-        Assert.Equals(updatedUser1.Name, "Aboba");
-        Assert.Equals(updatedUser1.isTeacher, true);
+        Assert.That((VarChar)"Aboba", Is.EqualTo(updatedUser1.Name));
+        Assert.That((Boolean)true, Is.EqualTo(updatedUser1.isTeacher));
 
         // ----------- delete -----------
         await users.Delete();
