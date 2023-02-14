@@ -200,14 +200,14 @@ public class DataBaseModel<TModel>
 
     #region Updating
 
-    public async Task<IEnumerable<TModel>> Update(SqlFilter filter, string key, string value)
+    public async Task<int> Update(SqlFilter filter, string key, string value)
     {
         var query = $"UPDATE {SchemaName}.{TableName} SET {key}='{value}' WHERE {filter};";
         Console.WriteLine(query);
-        return await QueryAsync(query);
+        return await ExecuteAsync(query);
     }
 
-    public async Task<IEnumerable<TModel>> Update(SqlFilter filter, params ValueTuple<string, string>[] data)
+    public async Task<int> Update(SqlFilter filter, params ValueTuple<string, string>[] data)
     {
         if (data.Length == 0) throw new PostgresOrmException($"There is no data to update for {filter}.");
         var set = "";
@@ -218,17 +218,17 @@ public class DataBaseModel<TModel>
 
         var query = $"UPDATE {SchemaName}.{TableName} SET {set[..^2]} WHERE {filter};";
         Console.WriteLine(query);
-        return await QueryAsync(query);
+        return await ExecuteAsync(query);
     }
 
-    public async Task<IEnumerable<TModel>> Update(TModel obj, string key, string value)
+    public async Task<int> Update(TModel obj, string key, string value)
     {
         var query = $"UPDATE {SchemaName}.{TableName} SET {key}='{value}' WHERE {CreateFilter(obj)};";
         Console.WriteLine(query);
-        return await QueryAsync(query);
+        return await ExecuteAsync(query);
     }
 
-    public async Task<IEnumerable<TModel>> Update(TModel obj, params ValueTuple<string, string>[] data)
+    public async Task<int> Update(TModel obj, params ValueTuple<string, string>[] data)
     {
         if (data.Length == 0) throw new PostgresOrmException($"There is no data to update for {obj}.");
         var set = "";
@@ -239,14 +239,14 @@ public class DataBaseModel<TModel>
 
         var query = $"UPDATE {SchemaName}.{TableName} SET {set[..^2]} WHERE {CreateFilter(obj)};";
         Console.WriteLine(query);
-        return await QueryAsync(query);
+        return await ExecuteAsync(query);
     }
 
-    public async Task<IEnumerable<TModel>> Update(string setCondition, string whereCondition)
+    public async Task<int> Update(string setCondition, string whereCondition)
     {
         var query = $"UPDATE {SchemaName}.{TableName} SET {setCondition} WHERE {whereCondition};";
         Console.WriteLine(query);
-        return await QueryAsync(query);
+        return await ExecuteAsync(query);
     }
 
     #endregion
