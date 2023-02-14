@@ -130,8 +130,8 @@ public class GeneralTests
         await users.Update(user1, ("name", "Aboba"), ("isteacher", "true"));
         var queryResult = await users.Select(users["Id"] == 1);
         var updatedUser1 = queryResult.First();
-        Assert.That((VarChar)"Aboba", Is.EqualTo(updatedUser1.Name));
-        Assert.That((Boolean)true, Is.EqualTo(updatedUser1.isTeacher));
+        Assert.True(updatedUser1.Name == "Aboba");
+        Assert.True(updatedUser1.isTeacher == true);
 
         // ----------- delete -----------
         await users.Delete();
