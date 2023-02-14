@@ -98,8 +98,8 @@ public class GeneralTests
             Assert.That(2, Is.EqualTo(selectAll.Count()));
             var user1_sa = selectAll.First();
             var user2_sa = selectAll.Last();
-            Assert.That(user1, Is.EqualTo(user1_sa));
-            Assert.That(user2, Is.EqualTo(user2_sa));
+            Assert.True(user1.Equals(user1_sa));
+            Assert.True(user2.Equals(user2_sa));
         }
 
         // Definite object
@@ -108,7 +108,7 @@ public class GeneralTests
             var selectUser1 = await users.Select(user1);
             Assert.That(1, Is.EqualTo(selectUser1.Count()));
             var user_su1 = selectUser1.First();
-            Assert.That(user1, Is.EqualTo(user_su1));
+            Assert.True(user1.Equals(user_su1));
         }
 
         // Empty response
@@ -123,7 +123,7 @@ public class GeneralTests
             var selectQuery = await users.Select("Name = 'Otter18'");
             Assert.That(1, Is.EqualTo(selectQuery.Count()));
             var user_sq = selectQuery.First();
-            Assert.That(user2, Is.EqualTo(user_sq));
+            Assert.True(user2.Equals(user_sq));
         }
 
         // ----------- update -----------
