@@ -45,29 +45,29 @@ public class GeneralTests
             Assert.That(2, Is.EqualTo(selectQuery1.Count()));
             var user1_sq1 = selectQuery1.First();
             var user2_sq1 = selectQuery1.Last();
-            Assert.That(user1, Is.EqualTo(user1_sq1));
-            Assert.That(user2, Is.EqualTo(user2_sq1));
+            Assert.True(user1.Equals(user1_sq1));
+            Assert.True(user2.Equals(user2_sq1));
         }
 
         {
             var selectQuery2 = await users.Select(users["Name"].Contains("18") & users["isTeacher"] == true);
             Assert.That(1, Is.EqualTo(selectQuery2.Count()));
             var user_sq2 = selectQuery2.First();
-            Assert.That(user2, Is.EqualTo(user_sq2));
+            Assert.True(user2.Equals(user_sq2));
         }
 
         {
             var selectQuery3 = await users.Select(users["Name"].FinishesWith("18") & users["isTeacher"] != false);
             Assert.That(1, Is.EqualTo(selectQuery3.Count()));
             var user_sq3 = selectQuery3.First();
-            Assert.That(user2, Is.EqualTo(user_sq3));
+            Assert.True(user2.Equals(user_sq3));
         }
 
         {
             var selectQuery4 = await users.Select(users["Name"].StartsWith("Otter"));
             Assert.That(1, Is.EqualTo(selectQuery4.Count()));
             var user_sq4 = selectQuery4.First();
-            Assert.That(user2, Is.EqualTo(user_sq4));
+            Assert.True(user2.Equals(user_sq4));
         }
 
         // testing in delete query
