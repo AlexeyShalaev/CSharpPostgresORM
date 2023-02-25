@@ -51,9 +51,9 @@ public class BigInteger : ISqlType<long>
 
     // Unary
 
-    public static BigInteger operator ++(BigInteger bigInteger) => bigInteger.Value++;
+    public static BigInteger operator ++(BigInteger bigInteger) => ++bigInteger.Value;
 
-    public static BigInteger operator --(BigInteger bigInteger) => bigInteger.Value--;
+    public static BigInteger operator --(BigInteger bigInteger) => --bigInteger.Value;
 
     public static BigInteger operator +(BigInteger bigInteger) => bigInteger.Value;
 

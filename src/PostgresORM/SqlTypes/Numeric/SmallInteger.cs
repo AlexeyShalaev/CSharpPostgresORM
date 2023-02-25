@@ -51,9 +51,9 @@ public class SmallInteger : ISqlType<short>
 
     // Unary
 
-    public static SmallInteger operator ++(SmallInteger shortNumber) => shortNumber.Value++;
+    public static SmallInteger operator ++(SmallInteger shortNumber) => ++shortNumber.Value;
 
-    public static SmallInteger operator --(SmallInteger shortNumber) => shortNumber.Value--;
+    public static SmallInteger operator --(SmallInteger shortNumber) => --shortNumber.Value;
 
     public static SmallInteger operator +(SmallInteger shortNumber) => shortNumber.Value;
 
