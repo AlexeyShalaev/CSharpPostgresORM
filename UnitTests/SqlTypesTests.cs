@@ -1,6 +1,8 @@
 using PostgresORM.SqlTypes.Binary;
 using PostgresORM.SqlTypes.Numeric;
+using PostgresORM.SqlTypes.String;
 using Boolean = PostgresORM.SqlTypes.Binary.Boolean;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace UnitTests;
 
@@ -93,6 +95,27 @@ public class SqlTypesTests
     [Test]
     public void BigSerial()
     {
+        long a = 57;
+        long b = 179;
+
+        BigSerial a_ = a;
+        BigSerial b_ = b;
+
+        Assert.That((long)(a_ + b_), Is.EqualTo(a + b));
+        Assert.That((long)(a_ - b_), Is.EqualTo(a - b));
+        Assert.That((long)(a_ * b_), Is.EqualTo(a * b));
+        Assert.That((long)(a_ / b_), Is.EqualTo(a / b));
+        Assert.That((long)(b_ % a_), Is.EqualTo(b % a));
+        
+        Assert.That((long)++a_, Is.EqualTo(++a));
+        Assert.That(-a_, Is.EqualTo(-a));
+        Assert.That((long)--a_, Is.EqualTo(--a));
+
+        Assert.That(a_ > b_, Is.False);
+        Assert.That(a_ >= b_, Is.False);
+        Assert.That(a_ == b_, Is.False);
+        Assert.That(a_ <= b_, Is.True);
+        Assert.That(a_ < b_, Is.True);
     }
 
     [Test]
@@ -118,6 +141,7 @@ public class SqlTypesTests
     [Test]
     public void Serial()
     {
+        
     }
 
     [Test]
@@ -157,17 +181,68 @@ public class SqlTypesTests
     [Test]
     public void Json()
     {
+        var people = new People("John", 10, DateTime.Parse("01.01.1990"), true);
+        var jsonPeople = new Json<People>(people);
+        var jsonString = "{\"Name\":\"John\",\"Age\":10,\"Birthday\":\"1990-01-01T00:00:00\",\"IsMan\":true}";
+        
+        Assert.That(((Json<People>)people).Value, Is.EqualTo(jsonPeople.Value));
+        Assert.That(((Json<People?>)jsonString).Value, Is.EqualTo(jsonPeople.Value));
+        Assert.That((People) jsonPeople, Is.EqualTo(people));
     }
 
     [Test]
     public void Text()
     {
+        string a = "hello";
+        string b = "hello";
+        string c = " world";
+
+        Text a_ = a;
+        Text b_ = b;
+        Text c_ = c;
+        string aFromA_ = a_;
+
+        Assert.That(a_ == b_, Is.EqualTo(true));
+        Assert.That(a_ == c_, Is.EqualTo(false));
+        Assert.That(a_ > c_, Is.EqualTo(true));
+        Assert.That(a_ < c_, Is.EqualTo(false));
+        Assert.That(a_ >= b_, Is.EqualTo(true));
+        Assert.That(a_ == b_, Is.EqualTo(true));
+        Assert.That(a_ == c_, Is.EqualTo(false));
+        Assert.That(a_ != b_, Is.EqualTo(false));
+        Assert.That(a_ != c_, Is.EqualTo(true));
+        Assert.That((string)(a_ + c_), Is.EqualTo(a + c));
     }
 
     [Test]
     public void VarChar()
     {
+        string a = "hello";
+        string b = "hello";
+        string c = " world";
+
+        VarChar a_ = a;
+        VarChar b_ = b;
+        VarChar c_ = c;
+        string aFromA_ = a_;
+
+        Assert.That(a_ == b_, Is.EqualTo(true));
+        Assert.That(a_ == c_, Is.EqualTo(false));
+        Assert.That(a_ > c_, Is.EqualTo(true));
+        Assert.That(a_ < c_, Is.EqualTo(false));
+        Assert.That(a_ >= b_, Is.EqualTo(true));
+        Assert.That(a_ == b_, Is.EqualTo(true));
+        Assert.That(a_ == c_, Is.EqualTo(false));
+        Assert.That(a_ != b_, Is.EqualTo(false));
+        Assert.That(a_ != c_, Is.EqualTo(true));
+        Assert.That((string)(a_ + c_), Is.EqualTo(a + c));
     }
 
     #endregion
 }
+
+#region Record for Json Test
+
+public record People(string Name, int Age, DateTime Birthday, bool IsMan);
+
+#endregion

@@ -70,5 +70,5 @@ public class VarChar : ISqlType<string>
     
     // Binary
 
-    public static Text operator +(VarChar lhs, VarChar rhs) => lhs.Value + rhs.Value;
+    public static VarChar operator +(VarChar lhs, VarChar rhs) => lhs.Value + rhs.Value;
     }
