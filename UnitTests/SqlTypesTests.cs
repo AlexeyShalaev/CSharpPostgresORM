@@ -88,6 +88,7 @@ public class SqlTypesTests
         Assert.That(a_ > b_, Is.False);
         Assert.That(a_ >= b_, Is.False);
         Assert.That(a_ == b_, Is.False);
+        Assert.That(a_ != b_, Is.True);
         Assert.That(a_ <= b_, Is.True);
         Assert.That(a_ < b_, Is.True);
     }
@@ -95,36 +96,187 @@ public class SqlTypesTests
     [Test]
     public void BigSerial()
     {
+        ulong a = 57;
+        ulong b = 179;
+
+        BigSerial a_ = a;
+        BigSerial b_ = b;
+
+        Assert.That((ulong)(a_ + b_), Is.EqualTo(a + b));
+        Assert.That((ulong)(a_ - b_), Is.EqualTo(a - b));
+        Assert.That((ulong)(a_ * b_), Is.EqualTo(a * b));
+        Assert.That((ulong)(a_ / b_), Is.EqualTo(a / b));
+        Assert.That((ulong)(b_ % a_), Is.EqualTo(b % a));
+
+        Assert.That((ulong)++a_, Is.EqualTo(++a));
+        Assert.That((ulong)--a_, Is.EqualTo(--a));
+
+        Assert.That(a_ > b_, Is.False);
+        Assert.That(a_ >= b_, Is.False);
+        Assert.That(a_ == b_, Is.False);
+        Assert.That(a_ != b_, Is.True);
+        Assert.That(a_ <= b_, Is.True);
+        Assert.That(a_ < b_, Is.True);
     }
 
     [Test]
     public void Decimal()
     {
+        decimal a = 57;
+        decimal b = 179;
+
+        Decimal a_ = a;
+        Decimal b_ = b;
+
+        Assert.That((decimal)(a_ + b_), Is.EqualTo(a + b));
+        Assert.That((decimal)(a_ - b_), Is.EqualTo(a - b));
+        Assert.That((decimal)(a_ * b_), Is.EqualTo(a * b));
+        Assert.That((decimal)(a_ / b_), Is.EqualTo(a / b));
+        Assert.That((decimal)(b_ % a_), Is.EqualTo(b % a));
+
+        Assert.That((decimal)++a_, Is.EqualTo(++a));
+        Assert.That((decimal)-a_, Is.EqualTo(-a));
+        Assert.That((decimal)--a_, Is.EqualTo(--a));
+
+        Assert.That(a_ > b_, Is.False);
+        Assert.That(a_ >= b_, Is.False);
+        Assert.That(a_ == b_, Is.False);
+        Assert.That(a_ != b_, Is.True);
+        Assert.That(a_ <= b_, Is.True);
+        Assert.That(a_ < b_, Is.True);
     }
 
     [Test]
     public void Integer()
     {
+        int a = 57;
+        int b = 179;
+
+        Integer a_ = a;
+        Integer b_ = b;
+
+        Assert.That((int)(a_ + b_), Is.EqualTo(a + b));
+        Assert.That((int)(a_ - b_), Is.EqualTo(a - b));
+        Assert.That((int)(a_ * b_), Is.EqualTo(a * b));
+        Assert.That((int)(a_ / b_), Is.EqualTo(a / b));
+        Assert.That((int)(b_ % a_), Is.EqualTo(b % a));
+
+        Assert.That((int)++a_, Is.EqualTo(++a));
+        Assert.That((int)-a_, Is.EqualTo(-a));
+        Assert.That((int)--a_, Is.EqualTo(--a));
+
+        Assert.That(a_ > b_, Is.False);
+        Assert.That(a_ >= b_, Is.False);
+        Assert.That(a_ == b_, Is.False);
+        Assert.That(a_ != b_, Is.True);
+        Assert.That(a_ <= b_, Is.True);
+        Assert.That(a_ < b_, Is.True);
     }
 
     [Test]
     public void Numeric()
     {
+        decimal a = 57;
+        decimal b = 179;
+
+        Numeric a_ = a;
+        Numeric b_ = b;
+
+        Assert.That((decimal)(a_ + b_), Is.EqualTo(a + b));
+        Assert.That((decimal)(a_ - b_), Is.EqualTo(a - b));
+        Assert.That((decimal)(a_ * b_), Is.EqualTo(a * b));
+        Assert.That((decimal)(a_ / b_), Is.EqualTo(a / b));
+        Assert.That((decimal)(b_ % a_), Is.EqualTo(b % a));
+
+        Assert.That((decimal)++a_, Is.EqualTo(++a));
+        Assert.That((decimal)-a_, Is.EqualTo(-a));
+        Assert.That((decimal)--a_, Is.EqualTo(--a));
+
+        Assert.That(a_ > b_, Is.False);
+        Assert.That(a_ >= b_, Is.False);
+        Assert.That(a_ == b_, Is.False);
+        Assert.That(a_ != b_, Is.True);
+        Assert.That(a_ <= b_, Is.True);
+        Assert.That(a_ < b_, Is.True);
     }
 
     [Test]
     public void Real()
     {
+        float a = 57;
+        float b = 179;
+
+        Real a_ = a;
+        Real b_ = b;
+
+        Assert.That((float)(a_ + b_), Is.EqualTo(a + b));
+        Assert.That((float)(a_ - b_), Is.EqualTo(a - b));
+        Assert.That((float)(a_ * b_), Is.EqualTo(a * b));
+        Assert.That((float)(a_ / b_), Is.EqualTo(a / b));
+        Assert.That((float)(b_ % a_), Is.EqualTo(b % a));
+
+        Assert.That((float)++a_, Is.EqualTo(++a));
+        Assert.That((float)-a_, Is.EqualTo(-a));
+        Assert.That((float)--a_, Is.EqualTo(--a));
+
+        Assert.That(a_ > b_, Is.False);
+        Assert.That(a_ >= b_, Is.False);
+        Assert.That(a_ == b_, Is.False);
+        Assert.That(a_ != b_, Is.True);
+        Assert.That(a_ <= b_, Is.True);
+        Assert.That(a_ < b_, Is.True);
     }
 
     [Test]
     public void Serial()
     {
+        uint a = 57;
+        uint b = 179;
+
+        Serial a_ = a;
+        Serial b_ = b;
+
+        Assert.That((uint)(a_ + b_), Is.EqualTo(a + b));
+        Assert.That((uint)(a_ - b_), Is.EqualTo(a - b));
+        Assert.That((uint)(a_ * b_), Is.EqualTo(a * b));
+        Assert.That((uint)(a_ / b_), Is.EqualTo(a / b));
+        Assert.That((uint)(b_ % a_), Is.EqualTo(b % a));
+
+        Assert.That((uint)++a_, Is.EqualTo(++a));
+        Assert.That((uint)--a_, Is.EqualTo(--a));
+
+        Assert.That(a_ > b_, Is.False);
+        Assert.That(a_ >= b_, Is.False);
+        Assert.That(a_ == b_, Is.False);
+        Assert.That(a_ != b_, Is.True);
+        Assert.That(a_ <= b_, Is.True);
+        Assert.That(a_ < b_, Is.True);
     }
 
     [Test]
     public void SmallInteger()
     {
+        short a = 57;
+        short b = 179;
+
+        SmallInteger a_ = a;
+        SmallInteger b_ = b;
+
+        Assert.That((short)(a_ + b_), Is.EqualTo(a + b));
+        Assert.That((short)(a_ - b_), Is.EqualTo(a - b));
+        Assert.That((short)(a_ * b_), Is.EqualTo(a * b));
+        Assert.That((short)(a_ / b_), Is.EqualTo(a / b));
+        Assert.That((short)(b_ % a_), Is.EqualTo(b % a));
+
+        Assert.That((short)++a_, Is.EqualTo(++a));
+        Assert.That((short)--a_, Is.EqualTo(--a));
+
+        Assert.That(a_ > b_, Is.False);
+        Assert.That(a_ >= b_, Is.False);
+        Assert.That(a_ == b_, Is.False);
+        Assert.That(a_ != b_, Is.True);
+        Assert.That(a_ <= b_, Is.True);
+        Assert.That(a_ < b_, Is.True);
     }
 
     #endregion
