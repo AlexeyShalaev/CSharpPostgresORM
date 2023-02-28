@@ -51,9 +51,9 @@ public class Integer : ISqlType<int>
 
     // Unary
 
-    public static Integer operator ++(Integer integer) => integer.Value++;
+    public static Integer operator ++(Integer integer) => ++integer.Value;
 
-    public static Integer operator --(Integer integer) => integer.Value--;
+    public static Integer operator --(Integer integer) => --integer.Value;
 
     public static Integer operator +(Integer integer) => integer.Value;
 

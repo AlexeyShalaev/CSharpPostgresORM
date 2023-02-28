@@ -51,9 +51,9 @@ public class Decimal : ISqlType<decimal>
 
     // Unary
 
-    public static Decimal operator ++(Decimal decimalNumber) => decimalNumber.Value++;
+    public static Decimal operator ++(Decimal decimalNumber) => ++decimalNumber.Value;
 
-    public static Decimal operator --(Decimal decimalNumber) => decimalNumber.Value--;
+    public static Decimal operator --(Decimal decimalNumber) => --decimalNumber.Value;
 
     public static Decimal operator +(Decimal decimalNumber) => decimalNumber.Value;
 

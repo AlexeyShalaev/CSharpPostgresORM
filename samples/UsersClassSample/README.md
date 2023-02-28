@@ -61,6 +61,21 @@ var selectQuery3 = await users.Select(users["Name"].FinishesWith("18") & users["
 var selectQuery4 = await users.Select(users["Name"].StartsWith("Otter"));
 ```
 
+## Updating
+
+### Based on filter
+
+```csharp
+await users.Update(users["Name"] == "Alex", ("name", "Glinomes"), ("isteacher", "true"));
+```
+
+### Update by user object
+
+```csharp
+await users.Update(user1, ("name", "Stepashka"), ("isteacher", "true"));
+await users.Update(user2, "name", "Portyanka");
+```
+
 ## Delete
 
 ### Based on filter

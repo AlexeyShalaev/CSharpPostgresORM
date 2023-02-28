@@ -51,8 +51,8 @@ public class BigSerial : ISqlType<ulong>
 
     // Unary
 
-    public static BigSerial operator ++(BigSerial bigSerial) => bigSerial.Value++;
-    public static BigSerial operator --(BigSerial bigSerial) => bigSerial.Value--;
+    public static BigSerial operator ++(BigSerial bigSerial) => ++bigSerial.Value;
+    public static BigSerial operator --(BigSerial bigSerial) => --bigSerial.Value;
     public static BigSerial operator +(BigSerial bigSerial) => bigSerial.Value;
 
     // Binary

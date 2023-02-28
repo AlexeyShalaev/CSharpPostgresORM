@@ -51,9 +51,9 @@ public class Real : ISqlType<float>
 
     // Unary
 
-    public static Real operator ++(Real floatNumber) => floatNumber.Value++;
+    public static Real operator ++(Real floatNumber) => ++floatNumber.Value;
 
-    public static Real operator --(Real floatNumber) => floatNumber.Value--;
+    public static Real operator --(Real floatNumber) => --floatNumber.Value;
 
     public static Real operator +(Real floatNumber) => floatNumber.Value;
 

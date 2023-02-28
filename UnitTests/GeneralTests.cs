@@ -1,4 +1,7 @@
 using PostgresORM;
+using Boolean = PostgresORM.SqlTypes.Binary.Boolean;
+using PostgresORM.SqlTypes.String;
+
 
 namespace UnitTests;
 
@@ -27,8 +30,8 @@ public class GeneralTests
                       users["Gender"] != "female" &
                       (users["Age"] < 40 | users["Age"] > 80);
         Console.WriteLine(filter1);
-        Assert.That(filter1.ToString(),
-            Is.EqualTo("((Name = 'Chase' AND Gender != 'female') AND (Age < '40' OR Age > '80'))"));
+        Assert.That("((Name = 'Chase' AND Gender != 'female') AND (Age < '40' OR Age > '80'))",
+            Is.EqualTo(filter1.ToString()));
 
 
         // testing in select query
@@ -37,17 +40,35 @@ public class GeneralTests
         await users.Insert(user1);
         await users.Insert(user2);
 
-        var selectQuery1 = await users.Select(users["Name"] == "Alex" | users["isTeacher"] == true);
-        Assert.That(selectQuery1.Count(), Is.EqualTo(2)); // TODO compare actual data
+        {
+            var selectQuery1 = await users.Select(users["Name"] == "Alex" | users["isTeacher"] == true);
+            Assert.That(2, Is.EqualTo(selectQuery1.Count()));
+            var user1_sq1 = selectQuery1.First();
+            var user2_sq1 = selectQuery1.Last();
+            Assert.True(user1.Equals(user1_sq1));
+            Assert.True(user2.Equals(user2_sq1));
+        }
 
-        var selectQuery2 = await users.Select(users["Name"].Contains("18") & users["isTeacher"] == true);
-        Assert.That(selectQuery2.Count(), Is.EqualTo(1)); // TODO compare actual data
+        {
+            var selectQuery2 = await users.Select(users["Name"].Contains("18") & users["isTeacher"] == true);
+            Assert.That(1, Is.EqualTo(selectQuery2.Count()));
+            var user_sq2 = selectQuery2.First();
+            Assert.True(user2.Equals(user_sq2));
+        }
 
-        var selectQuery3 = await users.Select(users["Name"].FinishesWith("18") & users["isTeacher"] != false);
-        Assert.That(selectQuery3.Count(), Is.EqualTo(1)); // TODO compare actual data
+        {
+            var selectQuery3 = await users.Select(users["Name"].FinishesWith("18") & users["isTeacher"] != false);
+            Assert.That(1, Is.EqualTo(selectQuery3.Count()));
+            var user_sq3 = selectQuery3.First();
+            Assert.True(user2.Equals(user_sq3));
+        }
 
-        var selectQuery4 = await users.Select(users["Name"].StartsWith("Otter"));
-        Assert.That(selectQuery4.Count(), Is.EqualTo(1)); // TODO compare actual data
+        {
+            var selectQuery4 = await users.Select(users["Name"].StartsWith("Otter"));
+            Assert.That(1, Is.EqualTo(selectQuery4.Count()));
+            var user_sq4 = selectQuery4.First();
+            Assert.True(user2.Equals(user_sq4));
+        }
 
         // testing in delete query
         await users.Delete(users["Name"] == "Alex");
@@ -71,20 +92,46 @@ public class GeneralTests
         // ----------- select -----------
 
         // Select all
-        var selectAll = await users.Select();
-        Assert.That(selectAll.Count(), Is.EqualTo(2)); // TODO compare actual data 
+
+        {
+            var selectAll = await users.Select();
+            Assert.That(2, Is.EqualTo(selectAll.Count()));
+            var user1_sa = selectAll.First();
+            var user2_sa = selectAll.Last();
+            Assert.True(user1.Equals(user1_sa));
+            Assert.True(user2.Equals(user2_sa));
+        }
 
         // Definite object
-        var selectUser1 = await users.Select(user1);
-        Assert.That(selectUser1.Count(), Is.EqualTo(1)); // TODO compare actual data 
+
+        {
+            var selectUser1 = await users.Select(user1);
+            Assert.That(1, Is.EqualTo(selectUser1.Count()));
+            var user_su1 = selectUser1.First();
+            Assert.True(user1.Equals(user_su1));
+        }
 
         // Empty response
-        var selectEmpty = await users.Select(new User { Name = "Chase", isTeacher = false });
-        CollectionAssert.IsEmpty(selectEmpty);
+        {
+            var selectEmpty = await users.Select(new User { Name = "Chase", isTeacher = false });
+            CollectionAssert.IsEmpty(selectEmpty);
+        }
 
         // Query
-        var selectQuery = await users.Select("Name = 'Otter18'");
-        Assert.That(selectQuery.Count(), Is.EqualTo(1)); // TODO compare actual data 
+
+        {
+            var selectQuery = await users.Select("Name = 'Otter18'");
+            Assert.That(1, Is.EqualTo(selectQuery.Count()));
+            var user_sq = selectQuery.First();
+            Assert.True(user2.Equals(user_sq));
+        }
+
+        // ----------- update -----------
+        await users.Update(user1, ("name", "Aboba"), ("isteacher", "true"));
+        var queryResult = await users.Select(users["Id"] == 1);
+        var updatedUser1 = queryResult.First();
+        Assert.True(updatedUser1.Name == "Aboba");
+        Assert.True(updatedUser1.isTeacher == true);
 
         // ----------- delete -----------
         await users.Delete();

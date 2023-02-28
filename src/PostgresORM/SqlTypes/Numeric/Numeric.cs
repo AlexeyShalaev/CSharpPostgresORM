@@ -51,9 +51,9 @@ public class Numeric : ISqlType<decimal>
 
     // Unary
 
-    public static Numeric operator ++(Numeric numeric) => numeric.Value++;
+    public static Numeric operator ++(Numeric numeric) => ++numeric.Value;
 
-    public static Numeric operator --(Numeric numeric) => numeric.Value--;
+    public static Numeric operator --(Numeric numeric) => --numeric.Value;
 
     public static Numeric operator +(Numeric numeric) => numeric.Value;
 

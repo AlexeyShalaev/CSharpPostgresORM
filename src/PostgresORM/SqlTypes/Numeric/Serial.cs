@@ -51,8 +51,8 @@ public class Serial : ISqlType<uint>
 
     // Unary
 
-    public static Serial operator ++(Serial serial) => serial.Value++;
-    public static Serial operator --(Serial serial) => serial.Value--;
+    public static Serial operator ++(Serial serial) => ++serial.Value;
+    public static Serial operator --(Serial serial) => --serial.Value;
     public static Serial operator +(Serial serial) => serial.Value;
 
     // Binary
