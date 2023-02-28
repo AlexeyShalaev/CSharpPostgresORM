@@ -96,20 +96,20 @@ public class SqlTypesTests
     [Test]
     public void BigSerial()
     {
-        ulong a = 57;
-        ulong b = 179;
+        long a = 57;
+        long b = 179;
 
         BigSerial a_ = a;
         BigSerial b_ = b;
 
-        Assert.That((ulong)(a_ + b_), Is.EqualTo(a + b));
-        Assert.That((ulong)(a_ - b_), Is.EqualTo(a - b));
-        Assert.That((ulong)(a_ * b_), Is.EqualTo(a * b));
-        Assert.That((ulong)(a_ / b_), Is.EqualTo(a / b));
-        Assert.That((ulong)(b_ % a_), Is.EqualTo(b % a));
+        Assert.That((long)(a_ + b_), Is.EqualTo(a + b));
+        Assert.That((long)(a_ - b_), Is.EqualTo(a - b));
+        Assert.That((long)(a_ * b_), Is.EqualTo(a * b));
+        Assert.That((long)(a_ / b_), Is.EqualTo(a / b));
+        Assert.That((long)(b_ % a_), Is.EqualTo(b % a));
 
-        Assert.That((ulong)++a_, Is.EqualTo(++a));
-        Assert.That((ulong)--a_, Is.EqualTo(--a));
+        Assert.That((long)++a_, Is.EqualTo(++a));
+        Assert.That((long)--a_, Is.EqualTo(--a));
 
         Assert.That(a_ > b_, Is.False);
         Assert.That(a_ >= b_, Is.False);
