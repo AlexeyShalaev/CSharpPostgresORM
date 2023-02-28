@@ -1,5 +1,6 @@
 using PostgresORM.SqlTypes.Binary;
 using PostgresORM.SqlTypes.Numeric;
+using PostgresORM.SqlTypes.String;
 using Boolean = PostgresORM.SqlTypes.Binary.Boolean;
 using PostgresORM.SqlTypes.Numeric;
 using Decimal = PostgresORM.SqlTypes.Numeric.Decimal;
