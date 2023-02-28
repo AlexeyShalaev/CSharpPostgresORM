@@ -13,7 +13,7 @@
             Your friendly neighborhood Postgres ORM
             GitHub: https://github.com/AlexeyShalaev/CSharpPostgresORM
         </Description>
-        <Copyright>(c) AlexeyShalaev &amp; otter18 &amp; qwatro2, 2023</Copyright>
+        <Copyright>(c) Alexey Shalaev &amp; Chernykh Vladimir (otter18) &amp; qwatro2 &amp; Artemiy Pavlychev, 2023</Copyright>
     </PropertyGroup>
 
     <ItemGroup>
