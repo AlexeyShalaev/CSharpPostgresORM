@@ -103,7 +103,7 @@ await users.Delete(users["Name"] == "Otter18");
 await users.Delete();
 ```
 
-# Methods
+# Documentation
 
 ## Connection to Data Base
 
@@ -121,4 +121,11 @@ public string TableName { get; set; }
 public string SchemaName { get; set; }
 
 public NpgsqlConnection Connection { get; }
+```
+
+## SqlTypes
+
+### Numeric
+```csharp
+1
 ```
