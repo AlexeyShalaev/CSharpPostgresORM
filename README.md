@@ -123,6 +123,49 @@ public string SchemaName { get; set; }
 public NpgsqlConnection Connection { get; }
 ```
 
+## Attributes
+
+```csharp
+[SqlColumn("PRIMARY KEY")] 
+[ColumnLength(32)] // used for VarChar
+```
+
+## Queries
+
+### Inserting
+
+```csharp
+public async Task<int> Insert(TModel obj);
+```
+
+### Selecting
+
+```csharp
+public async Task<IEnumerable<TModel>> Select(SqlFilter filter);
+public async Task<IEnumerable<TModel>> Select(TModel obj);
+public async Task<IEnumerable<TModel>> Select(string queryCondition = "");
+```
+
+### Updating
+
+```csharp
+public async Task<int> Update(SqlFilter filter, string key, string value);
+public async Task<int> Update(SqlFilter filter, params ValueTuple<string, string>[] data);
+public async Task<int> Update(TModel obj, string key, string value);
+public async Task<int> Update(TModel obj, params ValueTuple<string, string>[] data);
+public async Task<int> Update(string setCondition, string whereCondition);
+```
+### Deleting
+
+```csharp
+public async Task<int> Delete(SqlFilter filter);
+public async Task<int> Delete(TModel obj);
+public async Task<int> Delete(string queryCondition = "");
+```
+
+## Filters
+TODO: VOVA
+
 ## SqlTypes
 
 You can create your own data type inherited from the ISqlType interface that supports postgres.
