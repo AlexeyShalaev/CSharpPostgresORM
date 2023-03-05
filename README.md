@@ -141,13 +141,28 @@ public interface ISqlType<T> : ISqlType
 ```
 
 ### Numeric
-```
-BigInteger      ~ long
-BigSerial       ~ long
-Real            ~ float
-Decimal         ~ decimal
-Numeric         ~ decimal
-Integer         ~ int
-Serial          ~ uint
-SmallInteger    ~ short
-```
+| ORM Type | CSharp Type |
+| --- | --- |
+| BigInteger | long |
+| BigSerial | long |
+| Real | float |
+| Decimal | decimal |
+| Numeric | decimal |
+| Integer | int |
+| Serial | uint |
+| SmallInteger | short |
+
+### Binary
+| ORM Type | CSharp Type |
+| --- | --- |
+| Binary | byte[] |
+| Bit | bool |
+| Boolean | bool |
+
+### String
+| ORM Type | CSharp Type |
+| --- | --- |
+| Character | char |
+| Text | string |
+| VarChar | string |
+| Json | T |
