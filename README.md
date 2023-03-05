@@ -125,7 +125,29 @@ public NpgsqlConnection Connection { get; }
 
 ## SqlTypes
 
-### Numeric
+You can create your own data type inherited from the ISqlType interface that supports postgres.
+
 ```csharp
-1
+public class MyType : ISqlType<object>
+```
+
+### ISqlType
+
+```csharp
+public interface ISqlType<T> : ISqlType
+{
+    public T Value { get; set; }
+}
+```
+
+### Numeric
+```
+BigInteger      ~ long
+BigSerial       ~ long
+Real            ~ float
+Decimal         ~ decimal
+Numeric         ~ decimal
+Integer         ~ int
+Serial          ~ uint
+SmallInteger    ~ short
 ```
