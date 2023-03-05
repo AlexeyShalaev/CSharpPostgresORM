@@ -112,3 +112,13 @@ public static async Task<DataBaseModel<TModel>> CreateAsync(string server, strin
 public static async Task<DataBaseModel<TModel>> CreateAsync(string connectionString, string tableName, string schemaName = "public");
 public static async Task<DataBaseModel<TModel>> CreateAsync(NpgsqlConnection connection, string tableName, string schemaName = "public");
 ```
+
+## Properties
+
+```csharp
+public string TableName { get; set; }
+
+public string SchemaName { get; set; }
+
+public NpgsqlConnection Connection { get; }
+```
