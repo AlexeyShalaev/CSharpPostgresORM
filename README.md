@@ -102,3 +102,13 @@ await users.Delete(users["Name"] == "Otter18");
 ```csharp
 await users.Delete();
 ```
+
+# Methods
+
+## Connection to Data Base
+
+```csharp
+public static async Task<DataBaseModel<TModel>> CreateAsync(string server, string username, string password, string database, string tableName, string schemaName = "public")
+public static async Task<DataBaseModel<TModel>> CreateAsync(string connectionString, string tableName, string schemaName = "public")
+public static async Task<DataBaseModel<TModel>> CreateAsync(NpgsqlConnection connection, string tableName, string schemaName = "public")
+```
