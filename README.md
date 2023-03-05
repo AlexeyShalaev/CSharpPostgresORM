@@ -132,8 +132,8 @@ public NpgsqlConnection Connection { get; }
 
 ## Models
 
-!!!WARNING!!!__
-If you do not specify a value for the CSharp type insrting the model to the table, then it will be filled with default.__
+!!!WARNING!!!<br />
+If you do not specify a value for the CSharp type insrting the model to the table, then it will be filled with default.<br />
 Boolean field // OK<br />
 bool field => false // Only if it doesn't violate your logic<br />
 bool? field => null // OK<br />
