@@ -126,7 +126,7 @@ public NpgsqlConnection Connection { get; }
 ## Attributes
 
 ```csharp
-[SqlColumn("PRIMARY KEY")] 
+[SqlColumn("PRIMARY KEY")] // postgres limitations, for example: NOT NULL
 [ColumnLength(32)] // used for VarChar
 ```
 
