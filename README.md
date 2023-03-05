@@ -130,6 +130,25 @@ public NpgsqlConnection Connection { get; }
 [ColumnLength(32)] // used for VarChar
 ```
 
+## Models
+
+!!!WARNING!!!
+If you do not specify a value for the CSharp type insrting the model to the table, then it will be filled with default.
+Boolean field // OK
+bool field => false // Only if it doesn't violate your logic
+bool? field => null // OK
+
+```csharp
+public class Example
+{
+    public Integer Int_1 { get; set; } // SqlType
+
+    public int Int_2 { get; set; }      // CSharp Type 
+    
+    public int? Int_3 { get; set; }
+}
+```
+
 ## Queries
 
 ### Inserting
