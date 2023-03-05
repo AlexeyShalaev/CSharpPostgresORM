@@ -227,4 +227,4 @@ public interface ISqlType<T> : ISqlType
 | Character | char |
 | Text | string |
 | VarChar | string |
-| Json | T |
+| Json<T> | T |
