@@ -132,11 +132,16 @@ public NpgsqlConnection Connection { get; }
 
 ## Models
 
-!!!WARNING!!!<br />
-If you do not specify a value for the CSharp type insrting the model to the table, then it will be filled with default.<br />
-Boolean field // OK<br />
-bool field => false // Only if it doesn't violate your logic<br />
-bool? field => null // OK<br />
+> !!! WARNING !!!
+>
+> If you do not specify a value for the CSharp type inserting the model to the table, then it will be filled with
+> default.
+>
+> Boolean field // OK
+>
+> bool field => false // Only if it doesn't violate your logic
+>
+> bool? field => null // OK
 
 ```csharp
 public class Example
@@ -174,6 +179,7 @@ public async Task<int> Update(TModel obj, string key, string value);
 public async Task<int> Update(TModel obj, params ValueTuple<string, string>[] data);
 public async Task<int> Update(string setCondition, string whereCondition);
 ```
+
 ### Deleting
 
 ```csharp
@@ -183,7 +189,18 @@ public async Task<int> Delete(string queryCondition = "");
 ```
 
 ## Filters
-TODO: VOVA
+
+### SqlColumnFilter
+
+Could be accessed throw an instance of `DataBaseModel` class by index of column name, like this `DataBaseModel["ColumnName"]`.
+
+By comparing to different values, constrain for specific column is formed.
+
+Here are available operations: `==`, `!=`, `<`, `<=`, `>`, `>=`, `.Contains(obj)`, `.StartsWith(obj)`, `.FinishesWith(obj)`
+
+### SqlFilter
+
+Formed by logically combing `SqlColumnFilter` with `OR` (`|`) or `AND` (`&`)
 
 ## SqlTypes
 
@@ -203,28 +220,31 @@ public interface ISqlType<T> : ISqlType
 ```
 
 ### Numeric
-| ORM Type | CSharp Type |
-| --- | --- |
-| BigInteger | long |
-| BigSerial | long |
-| Real | float |
-| Decimal | decimal |
-| Numeric | decimal |
-| Integer | int |
-| Serial | uint |
-| SmallInteger | short |
+
+| ORM Type     | CSharp Type |
+|--------------|-------------|
+| BigInteger   | long        |
+| BigSerial    | long        |
+| Real         | float       |
+| Decimal      | decimal     |
+| Numeric      | decimal     |
+| Integer      | int         |
+| Serial       | uint        |
+| SmallInteger | short       |
 
 ### Binary
+
 | ORM Type | CSharp Type |
-| --- | --- |
-| Binary | byte[] |
-| Bit | bool |
-| Boolean | bool |
+|----------|-------------|
+| Binary   | byte[]      |
+| Bit      | bool        |
+| Boolean  | bool        |
 
 ### String
-| ORM Type | CSharp Type |
-| --- | --- |
-| Character | char |
-| Text | string |
-| VarChar | string |
-| Json<T> | T |
+
+| ORM Type  | CSharp Type |
+|-----------|-------------|
+| Character | char        |
+| Text      | string      |
+| VarChar   | string      |
+| Json<T>   | T           |
