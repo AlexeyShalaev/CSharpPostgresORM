@@ -2,7 +2,7 @@
 
 Your friendly neighborhood CSharp Postgres ORM
 
-[![Build status](https://github.com/App-vNext/Polly/workflows/build/badge.svg?branch=main&event=push)](https://github.com/App-vNext/Polly/actions?query=workflow%3Abuild+branch%3Amain+event%3Apush)
+![Build status](https://github.com/AlexeyShalaev/CSharpPostgresORM/actions/workflows/dotnet.yml/badge.svg?query=branch%3Amain)
 
 ## Install
 
