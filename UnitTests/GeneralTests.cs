@@ -29,7 +29,7 @@ public class GeneralTests
         var filter1 = users["Name"] == "Chase" &
                       users["Gender"] != "female" &
                       (users["Age"] < 40 | users["Age"] > 80);
-        Console.WriteLine(filter1);
+        
         Assert.That("((Name = 'Chase' AND Gender != 'female') AND (Age < '40' OR Age > '80'))",
             Is.EqualTo(filter1.ToString()));
 

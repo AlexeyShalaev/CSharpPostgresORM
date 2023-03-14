@@ -31,6 +31,10 @@ var selectQuery2 = await users.Select(users["Name"].Contains("18") & users["isTe
 var selectQuery3 = await users.Select(users["Name"].FinishesWith("18") & users["isTeacher"] != false);
 var selectQuery4 = await users.Select(users["Name"].StartsWith("Otter"));
 
+// ----------- update -----------
+await users.Update(users["Name"] == "Alex", ("name", "Glinomes"), ("isteacher", "true"));
+await users.Update(user1, ("name", "Stepashka"), ("isteacher", "true"));
+await users.Update(user2, "name", "Portyanka");
 
 // ----------- delete -----------
 await users.Delete(users["Name"] == "Alex");

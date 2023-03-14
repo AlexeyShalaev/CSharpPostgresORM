@@ -104,7 +104,6 @@ public class DataBaseModel<TModel>
         }
 
         var query = $"CREATE TABLE IF NOT EXISTS {SchemaName}.{TableName} ({string.Join(", ", columns)});";
-        Console.WriteLine(query);
         return await ExecuteAsync(query);
     }
 
@@ -164,7 +163,6 @@ public class DataBaseModel<TModel>
 
         var query =
             $"INSERT INTO {SchemaName}.{TableName}({GetColumns()}) VALUES({string.Join(", ", values)});";
-        Console.WriteLine(query);
         return await ExecuteAsync(query);
     }
 
@@ -177,7 +175,6 @@ public class DataBaseModel<TModel>
     public async Task<IEnumerable<TModel>> Select(SqlFilter filter)
     {
         var query = CreateQuery("SELECT *", filter.ToString());
-        Console.WriteLine(query);
         return await QueryAsync(query);
     }
 
@@ -185,14 +182,12 @@ public class DataBaseModel<TModel>
     public async Task<IEnumerable<TModel>> Select(TModel obj)
     {
         var query = CreateQuery("SELECT *", CreateFilter(obj));
-        Console.WriteLine(query);
         return await QueryAsync(query);
     }
 
     public async Task<IEnumerable<TModel>> Select(string queryCondition = "")
     {
         var query = CreateQuery("SELECT *", queryCondition);
-        Console.WriteLine(query);
         return await QueryAsync(query);
     }
 
@@ -203,7 +198,6 @@ public class DataBaseModel<TModel>
     public async Task<int> Update(SqlFilter filter, string key, string value)
     {
         var query = $"UPDATE {SchemaName}.{TableName} SET {key}='{value}' WHERE {filter};";
-        Console.WriteLine(query);
         return await ExecuteAsync(query);
     }
 
@@ -217,14 +211,12 @@ public class DataBaseModel<TModel>
         }
 
         var query = $"UPDATE {SchemaName}.{TableName} SET {set[..^2]} WHERE {filter};";
-        Console.WriteLine(query);
         return await ExecuteAsync(query);
     }
 
     public async Task<int> Update(TModel obj, string key, string value)
     {
         var query = $"UPDATE {SchemaName}.{TableName} SET {key}='{value}' WHERE {CreateFilter(obj)};";
-        Console.WriteLine(query);
         return await ExecuteAsync(query);
     }
 
@@ -238,14 +230,12 @@ public class DataBaseModel<TModel>
         }
 
         var query = $"UPDATE {SchemaName}.{TableName} SET {set[..^2]} WHERE {CreateFilter(obj)};";
-        Console.WriteLine(query);
         return await ExecuteAsync(query);
     }
 
     public async Task<int> Update(string setCondition, string whereCondition)
     {
         var query = $"UPDATE {SchemaName}.{TableName} SET {setCondition} WHERE {whereCondition};";
-        Console.WriteLine(query);
         return await ExecuteAsync(query);
     }
 
