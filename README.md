@@ -2,7 +2,7 @@
 
 Your friendly neighborhood CSharp Postgres ORM
 
-![Build status](https://github.com/AlexeyShalaev/CSharpPostgresORM/actions/workflows/dotnet.yml/badge.svg?query=branch%3Amain)
+[![Build status](https://github.com/AlexeyShalaev/CSharpPostgresORM/actions/workflows/dotnet.yml/badge.svg?query=branch%3Amain)](https://github.com/AlexeyShalaev/CSharpPostgresORM/actions/workflows/dotnet.yml)
 
 ## Install
 
